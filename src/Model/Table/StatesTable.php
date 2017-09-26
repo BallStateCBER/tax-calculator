@@ -33,6 +33,15 @@ class StatesTable extends Table
         $this->setTable('states');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
+        $this->hasOne('IncomeTaxRates', [
+            'className' => 'TaxRates'
+        ])
+            ->setForeignKey('loc_id')
+            ->setConditions([
+                'loc_type' => 'state',
+                'category_id' => TaxRatesTable::STATE_INCOME
+            ]);
     }
 
     /**

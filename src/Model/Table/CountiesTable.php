@@ -33,6 +33,23 @@ class CountiesTable extends Table
         $this->setTable('counties');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
+        $this->hasOne('IncomeTaxRates', [
+            'className' => 'TaxRates'
+        ])
+            ->setForeignKey('loc_id')
+            ->setConditions([
+                'loc_type' => 'county',
+                'category_id' => TaxRatesTable::COUNTY_INCOME
+            ]);
+        $this->hasOne('PropertyTaxRates', [
+            'className' => 'TaxRates'
+        ])
+            ->setForeignKey('loc_id')
+            ->setConditions([
+                'loc_type' => 'county',
+                'category_id' => TaxRatesTable::PROPERTY
+            ]);
     }
 
     /**

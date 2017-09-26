@@ -24,6 +24,9 @@ use Cake\Validation\Validator;
  */
 class TaxRatesTable extends Table
 {
+    const COUNTY_INCOME = 1;
+    const STATE_INCOME = 2;
+    const PROPERTY = 3;
 
     /**
      * Initialize method
@@ -41,11 +44,7 @@ class TaxRatesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Locs', [
-            'foreignKey' => 'loc_id',
-            'joinType' => 'INNER'
-        ]);
-        $this->belongsTo('Categories', [
+        $this->belongsTo('DataCategories', [
             'foreignKey' => 'category_id',
             'joinType' => 'INNER'
         ]);
