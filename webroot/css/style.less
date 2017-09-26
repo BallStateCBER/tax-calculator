@@ -1,3 +1,413 @@
 @import "./cake.css";
 @import "../../vendor/twbs/bootstrap/less/bootstrap.less";
 @import "../../vendor/ballstatecber/datacenter-plugin-cakephp3/webroot/css/datacenter.less";
+
+/* GENERAL, OTHER */
+.help_toggler {
+    cursor: help;
+    vertical-align: middle;
+}
+tr.shaded, td.shaded {
+    background-color: #EEE;
+}
+br.clear {
+    clear: both;
+    height: 0px;
+}
+div.paginator {
+    font-size: 8pt;
+    text-align: right;
+
+    img {
+        vertical-align: middle;
+    }
+}
+a.back_to_top {
+    clear: both;
+    display: block;
+    float: right;
+}
+
+/* CALCULATOR */
+.calc_input {
+    padding: 5px;
+
+    th:first-child {
+        text-align: right;
+    }
+    .moving {
+        > th {
+            vertical-align: top;
+        }
+        th:not(:first-child) {
+            text-align: left;
+        }
+        td {
+            padding: 0;
+        }
+    }
+    .arrow {
+        font-size: 150%;
+        font-weight: bold;
+    }
+    input[type="text"] {
+        width: 100px;
+    }
+}
+
+#calc_loading {
+    vertical-align: middle;
+}
+#calc_output_container {
+    text-align: center;
+
+    > div {
+        display: inline-block;
+        text-align: left;
+        &#additional_info {
+            display: block;
+        }
+    }
+}
+.calc_output {
+    border-bottom: 1px solid #000;
+    border-collapse: collapse;
+
+    &#calc_totals {
+        border-bottom: none;
+    }
+    td, th {
+        padding: 5px;
+        width: 150px;
+    }
+    thead {
+        td {
+            border-color: transparent #000 #000 transparent;
+            border-style: solid;
+            border-width: 1px;
+            text-align: center;
+        }
+        th {
+            text-align: center;
+
+            &:nth-child(2) {
+                border: 1px solid #000;
+            }
+            &:nth-child(3) {
+                border: 1px solid #000;
+            }
+        }
+    }
+    tbody {
+        tr:last-child {
+            th, td {
+                border-bottom: 1px solid #000;
+            }
+        }
+        th, td {
+            border-bottom: 1px dotted #AAA;
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+        }
+        td {
+            text-align: right;
+
+            &:nth-child(2) {
+                border-width: 0 0 1px 0;
+            }
+        }
+        th {
+            text-align: left;
+        }
+    }
+    .total_taxes {
+        th {
+            text-transform: uppercase;
+        }
+    }
+    .savings {
+        font-size: 110%;
+        font-weight: bold;
+
+        th {
+            padding: 0;
+            text-align: left;
+            text-transform: uppercase;
+        }
+        td {
+            text-align: center;
+        }
+    }
+}
+#recalculate_form {
+    text-align: center;
+}
+#sales_tax_breakdown_wrapper {
+    display: none;
+}
+#sales_tax_breakdown {
+    background-color: #EAF1FF;
+
+    th {
+        font-size: 80%;
+        padding: 2px 5px;
+    }
+    td {
+        padding: 2px 5px;
+    }
+    tr:first-child {
+        th, td {
+            border-top: 0;
+        }
+    }
+    tfoot {
+        td {
+            border: 1px solid black;
+            font-size: 80%;
+            text-align: left;
+        }
+    }
+    tbody {
+        tr:first-child {
+            th, td {
+                background: -moz-linear-gradient(top, rgba(127,127,127,0.65) 0%, rgba(106,106,106,0) 16%, rgba(0,0,0,0) 99%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(127,127,127,0.65)), color-stop(16%,rgba(106,106,106,0)), color-stop(99%,rgba(0,0,0,0)));
+                background: -webkit-linear-gradient(top, rgba(127,127,127,0.65) 0%,rgba(106,106,106,0) 16%,rgba(0,0,0,0) 99%);
+                background: -o-linear-gradient(top, rgba(127,127,127,0.65) 0%,rgba(106,106,106,0) 16%,rgba(0,0,0,0) 99%);
+                background: -ms-linear-gradient(top, rgba(127,127,127,0.65) 0%,rgba(106,106,106,0) 16%,rgba(0,0,0,0) 99%);
+                background: linear-gradient(top, rgba(127,127,127,0.65) 0%,rgba(106,106,106,0) 16%,rgba(0,0,0,0) 99%);
+                background-repeat: no-repeat;
+                -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+                filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+            }
+        }
+        tr:last-child {
+            th, td {
+                background: -moz-linear-gradient(top, rgba(0,0,0,0) 1%, rgba(106,106,106,0) 84%, rgba(127,127,127,0.65) 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(1%,rgba(0,0,0,0)), color-stop(84%,rgba(106,106,106,0)), color-stop(100%,rgba(127,127,127,0.65)));
+                background: -webkit-linear-gradient(top, rgba(0,0,0,0) 1%,rgba(106,106,106,0) 84%,rgba(127,127,127,0.65) 100%);
+                background: -o-linear-gradient(top, rgba(0,0,0,0) 1%,rgba(106,106,106,0) 84%,rgba(127,127,127,0.65) 100%);
+                background: -ms-linear-gradient(top, rgba(0,0,0,0) 1%,rgba(106,106,106,0) 84%,rgba(127,127,127,0.65) 100%);
+                background: linear-gradient(top, rgba(0,0,0,0) 1%,rgba(106,106,106,0) 84%,rgba(127,127,127,0.65) 100%);
+                background-repeat: no-repeat;
+                -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+                filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+            }
+        }
+    }
+}
+.calc_footnote {
+    font-size: 80%;
+    margin-top: 20px;
+    width: 483px;
+}
+#post_output_links {
+    text-align: left;
+
+    img {
+        text-decoration: none;
+    }
+    button {
+        padding: 0;
+
+        &::-moz-focus-inner {
+            border: 0;
+            padding: 0;
+        }
+    }
+}
+
+#additional_info {
+    > div {
+        display: none;
+        margin-left: 30px;
+    }
+}
+
+#formulas_used {
+    display: none;
+
+    td {
+        font-size: 80%;
+    }
+    .sales_tax_type {
+        border: 1px solid black;
+        font-size: 120%;
+        letter-spacing: 1px;
+        padding-top: 15px;
+    }
+}
+#sources {
+    display: none;
+
+    > div {
+        > ul {
+            margin: 0;
+            padding: 0;
+
+            > li {
+                font-weight: bold;
+                list-style-type: none;
+
+                ul {
+                    font-weight: normal;
+                    margin: 0 0 10px 0;
+                    padding-left: 20px;
+                }
+                &:last-child {
+                    ul {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+    li {
+        li {
+            list-style-type: circle;
+        }
+    }
+}
+
+/* Footnotes */
+#footnotes {
+    ul {
+        margin: 0;
+        padding: 0;
+
+        ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+    }
+
+    /* Category */
+    h3 {
+        font-size: 125%;
+        font-weight: bold;
+        margin: 0;
+    }
+    > div > ul > li {
+        font-weight: bold;
+        list-style-type: none;
+        margin-top: 15px;
+        padding: 0;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        /* State */
+        > ul > li {
+            font-weight: bold;
+            list-style-type: none;
+
+            /* Note */
+            > ul > li {
+                font-weight: normal;
+            }
+        }
+    }
+
+
+}
+
+#download_options {
+    > div {
+        padding-left: 15px;
+    }
+}
+
+
+html.print {
+    background-color: #fff;
+
+    body {
+        background-color: #fff;
+    }
+    h1 {
+        margin-bottom: 15px;
+    }
+    #sales_tax_breakdown_wrapper {
+        display: block;
+    }
+    #toggle_sales_taxes {
+        color: #000;
+        text-decoration: none;
+    }
+}
+
+
+#initial_input_form {
+    overflow: hidden;
+}
+.display_mode {
+    .display {
+        display: block;
+    }
+    .input {
+        display: none;
+        margin-bottom: 0;
+    }
+}
+.input_mode {
+    .display {
+        display: none;
+    }
+    .input {
+        display: block;
+        margin-bottom: 0;
+    }
+}
+#toggle_sales_taxes {
+    cursor: help;
+}
+#toggle_formulas {
+    img {
+        text-decoration: none;
+        vertical-align: bottom;
+    }
+}
+#calc_output_container {
+    h2 {
+        border-bottom: 1px solid black;
+        font-size: 150%;
+        font-weight: bold;
+        margin-top: 10px;
+
+        a {
+            cursor: help;
+        }
+    }
+    #output_wrapper {
+        display: inline-block;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+}
+#resources {
+    h3 {
+        margin-top: 0;
+    }
+}
+
+/* FORMS */
+div.input {
+    margin-bottom: 20px;
+
+    label {
+        display: block;
+        font-size: 125%;
+        font-weight: bold;
+    }
+    div.error-message {
+        color: red;
+        font-weight: bold;
+    }
+    .footnote {
+        color: #666;
+        font-size: 8pt;
+    }
+}
