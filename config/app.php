@@ -249,9 +249,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
+            'username' => env('DB_USERNAME', null),
+            'password' => env('DB_PASSWORD', null),
+            'database' => env('DB_DATABASE', null),
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],
@@ -289,8 +289,8 @@ return [
             'persistent' => false,
             'host' => 'localhost',
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
+            'username' => 'root',
+            'password' => '',
             'database' => 'test_myapp',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
