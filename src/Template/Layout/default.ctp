@@ -3,7 +3,6 @@
      * @var \App\View\AppView $this
      */
     $this->extend('DataCenter.default');
-    $this->assign('sidebar', $this->element('sidebar'));
     $this->Html->script('script.js', ['block' => 'scriptBottom']);
 ?>
 
