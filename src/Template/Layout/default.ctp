@@ -8,7 +8,11 @@
 ?>
 
 <?php $this->start('subsite_title'); ?>
-    <?php // Placeholder for a site header element ?>
+    <h1 id="subsite_title" class="max_width">
+        <a href="/">
+            <img src="/img/ILINTaxSavings.jpg" alt="Illinois-to-Indiana Tax Savings Calculator" />
+        </a>
+    </h1>
 <?php $this->end(); ?>
 
 <?php $this->append('scriptBottom'); ?>
