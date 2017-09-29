@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Model\Table\CountiesTable;
 use Cake\Core\Configure;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
@@ -36,6 +37,19 @@ class PagesController extends AppController
      */
     public function home()
     {
-        // placeholder
+        $this->loadModel('Counties');
+        $counties = [];
+        foreach (['IN', 'IL'] as $state) {
+            $counties[$state] = $this->Counties
+                ->find('list')
+                ->where(['state' => $state])
+                ->orderAsc('name')
+                ->toArray();
+        }
+
+        $this->set([
+            'title_for_layout' => '',
+            'counties' => $counties
+        ]);
     }
 }
