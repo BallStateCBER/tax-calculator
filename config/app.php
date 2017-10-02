@@ -364,4 +364,8 @@ return [
     'Session' => [
         'defaults' => 'php',
     ],
+
+    'data_center_subsite_title' => 'Illinois to Indiana Tax Savings Calculator',
+    'data_center_subsite_url' => env('FULL_BASE_URL', ''),
+    'google_analytics_id' => 'UA-32998887-10'
 ];
