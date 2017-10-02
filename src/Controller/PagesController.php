@@ -47,6 +47,12 @@ class PagesController extends AppController
                 ->toArray();
         }
 
+        if (!$this->request->is('post')) {
+            $this->request = $this->request->withData('home-value-before', '250000');
+            $this->request = $this->request->withData('home-value-after', '250000');
+            $this->request = $this->request->withData('income', '55000');
+        }
+
         $this->set([
             'title_for_layout' => '',
             'counties' => $counties
