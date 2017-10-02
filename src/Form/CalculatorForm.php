@@ -16,10 +16,10 @@ class CalculatorForm extends Form
     protected function _buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('from_county', 'string')
-            ->addField('to_county', 'string')
-            ->addField('home_value_before', 'number')
-            ->addField('home_value_after', 'number')
+            ->addField('from-county', 'string')
+            ->addField('to-county', 'string')
+            ->addField('home-value_before', 'number')
+            ->addField('home-value-after', 'number')
             ->addField('income', 'number')
             ->addField('dependents', 'number');
     }
@@ -32,7 +32,7 @@ class CalculatorForm extends Form
      */
     protected function _buildValidator(Validator $validator)
     {
-        foreach (['home_value_before', 'home_value_after', 'income'] as $field) {
+        foreach (['home-value-before', 'home-value-after', 'income'] as $field) {
             $validator->add($field, 'minimum', [
                 'rule' => function ($value) {
                     return $value > 0;

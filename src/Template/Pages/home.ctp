@@ -1,13 +1,13 @@
-<div id="calc-input">
-    <div>
-        <?= $this->Form->create(false, ['id' => 'initial_input_form']); ?>
+<div id="calc-input" class="row">
+    <div class="col-sm-4 col-md-offset-4">
+        <?= $this->Form->create(false, ['id' => 'calculator-input']); ?>
 
-        <?= $this->Form->input('from_county', [
+        <?= $this->Form->input('from-county', [
             'label' => 'What Illinois county are you moving from?',
             'options' => $counties['IL']
         ]); ?>
 
-        <?= $this->Form->input('to_county', [
+        <?= $this->Form->input('to-county', [
             'label' => 'What Indiana county are you moving to?',
             'options' => $counties['IN']
         ]); ?>
@@ -15,16 +15,16 @@
         <?php $this->Form->setTemplates(require(ROOT . DS . 'config' . DS . 'bootstrap_currency_form.php')); ?>
 
         <label for="calc-input-home-value-before">What is the value of your home in Illinois?</label>
-        <?= $this->Form->input('home_value_before', [
+        <?= $this->Form->input('home-value-before', [
             'label' => 'What is the value of your home in Illinois?',
-            'value' => isset($home_value) ? $home_value : null,
+            'value' => isset($homeValue) ? $homeValue : null,
             'id' => 'calc-input-home-value-before'
         ]); ?>
 
         <label for="calc-input-home-value-after">What is the value of your home in Indiana?</label>
-        <?= $this->Form->input('home_value_after', [
+        <?= $this->Form->input('home-value-after', [
             'label' => 'What is the value of your home in Indiana?',
-            'value' => isset($home_value) ? $home_value : null,
+            'value' => isset($homeValue) ? $homeValue : null,
             'id' => 'calc-input-home-value-after',
             'type' => 'number',
             'min' => 1,
@@ -63,5 +63,5 @@
 </div>
 
 <?php $this->append('buffered'); ?>
-    setup_input();
+    calculatorInput.init();
 <?php $this->end(); ?>
