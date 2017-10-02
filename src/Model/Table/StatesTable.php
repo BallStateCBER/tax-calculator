@@ -1,8 +1,6 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -19,6 +17,8 @@ use Cake\Validation\Validator;
  */
 class StatesTable extends Table
 {
+    const ILLINOIS = 13;
+    const INDIANA = 14;
 
     /**
      * Initialize method
