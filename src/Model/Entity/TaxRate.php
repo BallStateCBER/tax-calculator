@@ -14,8 +14,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Loc $loc
- * @property \App\Model\Entity\Category $category
+ * @property \App\Model\Entity\DataCategory $data_category
  */
 class TaxRate extends Entity
 {
