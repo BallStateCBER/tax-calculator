@@ -2,6 +2,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\TaxRate;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -48,6 +49,12 @@ class TaxRatesTable extends Table
             'foreignKey' => 'category_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Counties', [
+            'foreignKey' => 'loc_id'
+        ]);
+        $this->belongsTo('States', [
+            'foreignKey' => 'loc_id'
+        ]);
     }
 
     /**
@@ -84,19 +91,19 @@ class TaxRatesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        //$rules->add($rules->existsIn(['loc_id'], 'Locs'));
         $rules->add(function ($entity, $options) use ($rules) {
             if ($entity->loc_type == 'state') {
-                return $rules->existsIn('loc_id', 'States');
+                return $rules->existsIn('loc_id', 'States', 'Unknown state')($entity, $options);
             }
 
             if ($entity->loc_type == 'county') {
-                return $rules->existsIn('loc_id', 'Counties');
+                return $rules->existsIn('loc_id', 'Counties', 'Unknown county')($entity, $options);
             }
 
             // Unknown location type
-            return false;
+            throw new InternalErrorException('Unknown location type: ' . $entity->loc_type);
         }, 'locationExists');
+
         $rules->add($rules->existsIn(['category_id'], 'DataCategories'));
 
         return $rules;
