@@ -84,8 +84,20 @@ class TaxRatesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['loc_id'], 'Locs'));
-        $rules->add($rules->existsIn(['category_id'], 'Categories'));
+        //$rules->add($rules->existsIn(['loc_id'], 'Locs'));
+        $rules->add(function ($entity, $options) use ($rules) {
+            if ($entity->loc_type == 'state') {
+                return $rules->existsIn('loc_id', 'States');
+            }
+
+            if ($entity->loc_type == 'county') {
+                return $rules->existsIn('loc_id', 'Counties');
+            }
+
+            // Unknown location type
+            return false;
+        }, 'locationExists');
+        $rules->add($rules->existsIn(['category_id'], 'DataCategories'));
 
         return $rules;
     }
