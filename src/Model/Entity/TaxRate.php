@@ -37,6 +37,7 @@ class TaxRate extends Entity
         'created' => true,
         'modified' => true,
         'loc' => true,
-        'category' => true
+        'category' => true,
+        'year' => true
     ];
 }
