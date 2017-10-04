@@ -96,7 +96,7 @@
         </tbody>
     </table>
     <div id="sales_tax_breakdown_wrapper">
-        <table class="calc_output" id="sales_tax_breakdown">
+        <table class="calc-output" id="sales_tax_breakdown">
             <thead></thead>
             <tfoot></tfoot>
             <tbody>
@@ -122,7 +122,7 @@
             </tbody>
         </table>
     </div>
-    <table class="calc_output" id="calc_totals">
+    <table class="calc-output" id="calc_totals">
         <thead></thead>
         <tfoot class="savings">
         <tr>
@@ -183,3 +183,7 @@
 	</h2>
 	<?= $this->element('resources') ?>
 </div>
+
+<?php $this->append('buffered'); ?>
+    setupOutput();
+<?php $this->end(); ?>
