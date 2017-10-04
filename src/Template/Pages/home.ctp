@@ -1,6 +1,6 @@
 <div id="calc-input" class="row">
     <div class="col-sm-4 col-md-offset-4">
-        <?= $this->Form->create(false, ['id' => 'calculator-input']); ?>
+        <?= $this->Form->create($calculatorForm, ['id' => 'calculator-input']); ?>
 
         <?= $this->Form->input('from-county', [
             'label' => 'What Illinois county are you moving from?',
