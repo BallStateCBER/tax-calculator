@@ -140,7 +140,6 @@ class TaxRatesTable extends Table
      *
      * @param int $countyId County ID
      * @return float
-     * @throws NotFoundException
      */
     public function getCountyIncomeTaxRate($countyId)
     {
@@ -154,11 +153,7 @@ class TaxRatesTable extends Table
             ])
             ->first();
 
-        if (! $result) {
-            throw new NotFoundException('County income tax rate not found for county #' . $countyId);
-        }
-
-        return $result->value;
+        return $result ? $result->value : 0;
     }
 
     /**
