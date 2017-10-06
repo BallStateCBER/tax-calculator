@@ -3,6 +3,7 @@ namespace App\Calculator;
 
 use App\Model\Table\StatesTable;
 use App\Model\Table\TaxRatesTable;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -450,5 +451,158 @@ class Calculator
         }
 
         throw new NotFoundException('Unknown expenditure type "' . $type . '"');
+    }
+
+    /**
+     * Generates formulas that explain to the user how our calculations are made
+     *
+     * @param array $input Array of parameters
+     * @return array
+     */
+    public function getFormulas($input)
+    {
+        /**
+         * @var $avgAnnualExpenditures
+         * @var $countyIds
+         * @var $countyName
+         * @var $dependents
+         * @var $homeValues
+         * @var $income
+         * @var $salesTaxTypes
+         * @var $savings
+         * @var $stateAbbrevs
+         * @var $stateIds
+         * @var $taxes
+         */
+        extract($input);
+
+        $formulas = [];
+
+        $formulas['aae'] = $this->getAvgAnnualExpendituresPercent($income) . '% of income';
+
+        /** @var TaxRatesTable $taxRatesTable */
+        $taxRatesTable = TableRegistry::get('TaxRates');
+        foreach (['before', 'after'] as $key) {
+            $state = $stateAbbrevs[$key];
+            $formulas['exemptions'][$key] = $this->getExemptionsFormula($state);
+
+            $formulas['agi'][$key] = 'income &#8722; exemptions';
+
+            $stateTaxRate = $taxRatesTable->getStateIncomeTaxRate($stateIds[$key]);
+            $formulas['taxes']['state'][$key] = round($stateTaxRate, 2) . '% of AGI';
+
+            $countyId = $countyIds[$key];
+            $countyTaxRate = $taxRatesTable->getCountyIncomeTaxRate($countyId);
+            $formulas['taxes']['county'][$key] = round($countyTaxRate, 2) . '% of AGI';
+
+            // Property taxes
+            $homeValue = $homeValues[$key];
+            $formulas['rhv'][$key] = $this->getRHVFormula($homeValue, $state);
+            $formulas['shd'][$key] = $this->getSHDFormula($homeValue, $state);
+            $formulas['net_ahv'][$key] = $this->getAHVFormula($state);
+            $propertyTaxRate = $taxRatesTable->getPropertyTaxRate($countyId);
+            $percent = round($propertyTaxRate, 2);
+            switch ($state) {
+                case 'IN':
+                    $formulas['taxes']['property'][$key] = $percent . '% of Net AHV (capped at 1% of home value)';
+                    break;
+                case 'IL':
+                    $formulas['taxes']['property'][$key] = $percent . '% of home value';
+                    break;
+            }
+
+            foreach ($salesTaxTypes as $salesTaxType) {
+                $eRate = $this->getExpenditureRate($salesTaxType, $income);
+                $taxRates = $taxRatesTable->getSalesTaxRate($salesTaxType, $state, $countyId);
+                $taxRateString = $taxRates['min'] == $taxRates['max']
+                    ? $taxRates['min'] . '%'
+                    : $taxRates['min'] . '% to ' . $taxRates['max'] . '%';
+                $formulas['taxes']['sales'][$salesTaxType][$key] = $taxRateString . ' of AAE';
+                $formulas['expenditures'][$salesTaxType] = $eRate . '% of income';
+            }
+        }
+        return $formulas;
+    }
+
+    /**
+     * Returns the formula used to calculate tax exemptions for the specified state
+     *
+     * @param string $stateAbbrev State abbreviation
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getExemptionsFormula($stateAbbrev)
+    {
+        switch ($stateAbbrev) {
+            case 'IN':
+                return "$1,000 + ($1,500 &times; number of dependents)";
+            case 'IL':
+                return "$2,000 + ($2,000 &times; number of dependents)";
+        }
+
+        throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);
+    }
+
+    /**
+     * Returns the formula used to calculate Supplemental Homestead Deduction
+     *
+     * @param int $homeValue Home value in dollars
+     * @param string $stateAbbrev State abbreviation
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getSHDFormula($homeValue, $stateAbbrev)
+    {
+        switch ($stateAbbrev) {
+            case 'IN':
+                return ($this->getRV($homeValue, $stateAbbrev) <= 600000)
+                    ? '35% of RHV'
+                    : '$210,000 + 25% of (RHV - $600,000)';
+            case 'IL':
+                return '';
+        }
+
+        throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);
+    }
+
+    /**
+     * Returns the formula used to calculate Remainder Home Value
+     *
+     * @param int $homeValue Home value in dollars
+     * @param string $stateAbbrev State abbreviation
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getRHVFormula($homeValue, $stateAbbrev)
+    {
+        switch ($stateAbbrev) {
+            case 'IN':
+                return ($homeValue < 75000)
+                    ? "60% of home value"
+                    : "home value - $45,000";
+            case 'IL':
+                return '';
+        }
+
+        throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);
+    }
+
+    /**
+     * Returns the formula used to calculate Net Adjusted Home Value
+     *
+     * @param string $stateAbbrev State abbreviation
+     * @return string
+     * @throws InternalErrorException
+     */
+    public function getAHVFormula($stateAbbrev)
+    {
+        switch ($stateAbbrev) {
+            case 'IN':
+                return 'RHV - SHD';
+            case 'IL':
+                return '';
+        }
+
+        throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);
     }
 }

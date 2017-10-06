@@ -57,6 +57,8 @@ class PagesController extends AppController
                     'dependents' => $this->request->getData('dependents')
                 ]);
                 $this->set($output);
+                $formulas = $calculator->getFormulas($output);
+                $this->set('formulas', $formulas);
                 $this->render('output');
             }
         } else {
