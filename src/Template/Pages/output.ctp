@@ -2,7 +2,7 @@
     <h2>
         Estimated Annual Tax Savings
     </h2>
-    <table class="calc_output table">
+    <table class="calc-output table">
         <thead>
             <tr>
                 <td></td>
@@ -76,7 +76,7 @@
             </tr>
             <tr>
                 <th>
-                    <a href="#" id="toggle_sales_taxes" title="Show more details">
+                    <a href="#" id="toggle-sales-taxes" title="Show more details">
                         Sales taxes...
                     </a>
                 </th>
@@ -95,8 +95,8 @@
             </tr>
         </tbody>
     </table>
-    <div id="sales_tax_breakdown_wrapper">
-        <table class="calc-output" id="sales_tax_breakdown">
+    <div id="sales-tax-breakdown-wrapper">
+        <table class="calc-output" id="sales-tax-breakdown">
             <thead></thead>
             <tfoot></tfoot>
             <tbody>
@@ -126,7 +126,9 @@
         <thead></thead>
         <tfoot class="savings">
         <tr>
-            <th>Annual tax savings</th>
+            <th>
+                Annual tax savings
+            </th>
             <td colspan="2">
                 <?= $this->Calculator->formatMinMaxValue($savings['min'], $savings['max']) ?>
             </td>
@@ -156,28 +158,28 @@
 
 <div id="additional-info">
 	<h2>
-        <button id="toggle-formulas" class="btn btn-link">
+        <button id="toggle-formulas" class="btn btn-default">
             How was this calculated?
         </button>
 	</h2>
 	<?= $this->element('formulas_used') ?>
 
 	<h2>
-        <button id="toggle-sources" class="btn btn-link">
+        <button id="toggle-sources" class="btn btn-default">
             Data Sources
         </button>
 	</h2>
 	<?= $this->element('sources') ?>
 
 	<h2>
-        <button id="toggle-footnotes" class="btn btn-link">
+        <button id="toggle-footnotes" class="btn btn-default">
             Footnotes
         </button>
 	</h2>
 	<?= $this->element('footnotes') ?>
 	
 	<h2>
-        <button id="toggle-resources" class="btn btn-link">
+        <button id="toggle-resources" class="btn btn-default">
             Additional Resources
         </button>
 	</h2>
@@ -185,5 +187,5 @@
 </div>
 
 <?php $this->append('buffered'); ?>
-    setupOutput();
+    calculatorOutput.init();
 <?php $this->end(); ?>
