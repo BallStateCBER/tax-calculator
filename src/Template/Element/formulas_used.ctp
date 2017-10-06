@@ -119,7 +119,7 @@
 					</tr>
 					<?php foreach ($salesTaxTypes as $salesTaxType): ?>
 						<tr>
-							<th colspan="3" class="sales_tax_type">
+							<th colspan="3" class="sales-tax-type">
 								<?= ucfirst($salesTaxType) ?>
 							</th>
 						</tr>

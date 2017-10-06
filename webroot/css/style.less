@@ -37,6 +37,8 @@ a.back_to_top {
 .calc-output {
     border-bottom: 1px solid #000;
     border-collapse: collapse;
+    margin: auto;
+    width: auto;
 
     &#calc_totals {
         border-bottom: none;
@@ -44,6 +46,13 @@ a.back_to_top {
     td, th {
         padding: 5px;
         width: 150px;
+    }
+    > thead:first-child {
+        > tr:first-child {
+            > th {
+                border-top: 1px solid #000;
+            }
+        }
     }
     thead {
         td {
@@ -107,10 +116,10 @@ a.back_to_top {
 #recalculate-form {
     text-align: center;
 }
-#sales_tax_breakdown_wrapper {
+#sales-tax-breakdown-wrapper {
     display: none;
 }
-#sales_tax_breakdown {
+#sales-tax-breakdown {
     background-color: #EAF1FF;
 
     th {
@@ -189,17 +198,20 @@ a.back_to_top {
     }
 }
 
-#formulas_used {
+#formulas-used {
     display: none;
 
     td {
         font-size: 80%;
     }
-    .sales_tax_type {
+    .sales-tax-type {
         border: 1px solid black;
         font-size: 120%;
         letter-spacing: 1px;
         padding-top: 15px;
+    }
+    table {
+        margin: 0;
     }
 }
 #sources {
