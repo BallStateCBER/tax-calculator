@@ -24,7 +24,7 @@ class ImportShell extends Shell
         $parser->addSubcommand('property_tax', [
             'help' => 'Imports property tax rates',
         ]);
-        $parser->addSubcommand('income_tax', [
+        $parser->addSubcommand('county_income_tax', [
             'help' => 'Imports income tax rates',
         ]);
 
@@ -134,6 +134,16 @@ class ImportShell extends Shell
     public function propertyTax()
     {
         $this->import('property-tax-rates.txt', TaxRatesTable::PROPERTY);
+    }
+
+    /**
+     * Imports income tax rates from a tab-delimited text file
+     *
+     * @return void
+     */
+    public function countyIncomeTax()
+    {
+        $this->import('income-tax-rates.txt', TaxRatesTable::COUNTY_INCOME);
     }
 
     /**
