@@ -30,6 +30,13 @@ class TaxRatesTable extends Table
     const COUNTY_HIGHEST_SALES = 5;
 
     /**
+     * Only tax data for the specified year will be pulled from the database
+     *
+     * @var int
+     */
+    private $year = 2017;
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -124,7 +131,8 @@ class TaxRatesTable extends Table
             ->where([
                 'loc_type' => 'state',
                 'loc_id' => $stateId,
-                'category_id' => TaxRatesTable::STATE_INCOME
+                'category_id' => TaxRatesTable::STATE_INCOME,
+                'year' => $this->year
             ])
             ->first();
 
@@ -136,7 +144,7 @@ class TaxRatesTable extends Table
     }
 
     /**
-     * Returns county income tax rate
+     * Returns county income tax rate (which can be zero)
      *
      * @param int $countyId County ID
      * @return float
@@ -149,7 +157,8 @@ class TaxRatesTable extends Table
             ->where([
                 'loc_type' => 'county',
                 'loc_id' => $countyId,
-                'category_id' => TaxRatesTable::COUNTY_INCOME
+                'category_id' => TaxRatesTable::COUNTY_INCOME,
+                'year' => $this->year
             ])
             ->first();
 
@@ -171,7 +180,8 @@ class TaxRatesTable extends Table
             ->where([
                 'loc_type' => 'county',
                 'loc_id' => $countyId,
-                'category_id' => TaxRatesTable::PROPERTY
+                'category_id' => TaxRatesTable::PROPERTY,
+                'year' => $this->year
             ])
             ->first();
 
@@ -212,7 +222,8 @@ class TaxRatesTable extends Table
                 ->where([
                     'loc_type' => 'county',
                     'loc_id' => $countyId,
-                    'category_id' => TaxRatesTable::COUNTY_LOWEST_SALES
+                    'category_id' => TaxRatesTable::COUNTY_LOWEST_SALES,
+                    'year' => $this->year
                 ])
                 ->first();
 
@@ -222,9 +233,14 @@ class TaxRatesTable extends Table
                 ->where([
                     'loc_type' => 'county',
                     'loc_id' => $countyId,
-                    'category_id' => TaxRatesTable::COUNTY_HIGHEST_SALES
+                    'category_id' => TaxRatesTable::COUNTY_HIGHEST_SALES,
+                    'year' => $this->year
                 ])
                 ->first();
+
+            if (!$lowestRate || !$highestRate) {
+                throw new NotFoundException('Illinois sales tax rate not found');
+            }
 
             return [
                 'min' => $lowestRate->value,
