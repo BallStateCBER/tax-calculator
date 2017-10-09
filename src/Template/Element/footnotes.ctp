@@ -31,29 +31,23 @@
 ?>
 
 <div id="footnotes">
-	<div>
-		<ul>
-			<?php foreach ($footnotes  as $category => $locations): ?>
-				<li>
-					<h3>
-                        <?= $category ?>
-                    </h3>
-					<ul>
-						<?php foreach ($locations as $location => $lFootnotes): ?>
-							<li>
-								<?= $location ?>
-								<ul>
-									<?php foreach ($lFootnotes as $footnote): ?>
-										<li>
-                                            <?= $footnote ?>
-                                        </li>
-									<?php endforeach; ?>
-								</ul>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	</div>
+    <?php foreach ($footnotes  as $category => $locations): ?>
+        <h3>
+            <?= $category ?>
+        </h3>
+        <ul>
+            <?php foreach ($locations as $location => $lFootnotes): ?>
+                <li>
+                    <?= $location ?>
+                    <ul>
+                        <?php foreach ($lFootnotes as $footnote): ?>
+                            <li>
+                                <?= $footnote ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
 </div>

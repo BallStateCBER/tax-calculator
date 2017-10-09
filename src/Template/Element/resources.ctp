@@ -16,18 +16,16 @@
 ?>
 
 <div id="resources">
-	<div>
-		<?php foreach ($references as $category => $links): ?>
-			<h3>
-				<?= $category ?>
-			</h3>
-			<ul>
-				<?php foreach ($links as $url => $title): ?>
-					<li>
-						<?= $this->Html->link($title, $url, ['target' => '_blank']) ?>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-		<?php endforeach; ?>
-	</div>
+    <?php foreach ($references as $category => $links): ?>
+        <h3>
+            <?= $category ?>
+        </h3>
+        <ul>
+            <?php foreach ($links as $url => $title): ?>
+                <li>
+                    <?= $this->Html->link($title, $url, ['target' => '_blank']) ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
 </div>

@@ -13,20 +13,16 @@
 	]
 ]; ?>
 <div id="sources">
-	<div>
-		<ul>
-			<?php foreach ($sources as $category => $cSources): ?>
-				<li>
-					<?= $category ?>
-					<ul>
-						<?php foreach ($cSources as $url => $title): ?>
-							<li>
-								<?= $this->Html->link($title, $url) ?>
-							</li>
-						<?php endforeach; ?>
-					</ul>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	</div>
+    <?php foreach ($sources as $category => $cSources): ?>
+        <h3>
+            <?= $category ?>
+        </h3>
+        <ul>
+            <?php foreach ($cSources as $url => $title): ?>
+                <li>
+                    <?= $this->Html->link($title, $url) ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endforeach; ?>
 </div>

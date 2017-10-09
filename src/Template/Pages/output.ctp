@@ -158,28 +158,28 @@
 
 <div id="additional-info">
 	<h2>
-        <button id="toggle-formulas" class="btn btn-default">
+        <button id="toggle-formulas" class="btn btn-lg btn-default">
             How was this calculated?
         </button>
 	</h2>
 	<?= $this->element('formulas_used') ?>
 
 	<h2>
-        <button id="toggle-sources" class="btn btn-default">
+        <button id="toggle-sources" class="btn btn-lg btn-default">
             Data Sources
         </button>
 	</h2>
 	<?= $this->element('sources') ?>
 
 	<h2>
-        <button id="toggle-footnotes" class="btn btn-default">
+        <button id="toggle-footnotes" class="btn btn-lg btn-default">
             Footnotes
         </button>
 	</h2>
 	<?= $this->element('footnotes') ?>
 	
 	<h2>
-        <button id="toggle-resources" class="btn btn-default">
+        <button id="toggle-resources" class="btn btn-lg btn-default">
             Additional Resources
         </button>
 	</h2>
