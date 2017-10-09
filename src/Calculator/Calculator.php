@@ -17,13 +17,10 @@ class Calculator
      * @return array
      */
     public function calculate($input) {
-        // County
         $countyIds = [
             'before' => $input['from_county'],
             'after' => $input['to_county']
         ];
-
-        // State
         $stateIds = [
             'before' => StatesTable::ILLINOIS,
             'after' => StatesTable::INDIANA
@@ -32,20 +29,13 @@ class Calculator
             'before' => 'IL',
             'after' => 'IN'
         ];
-
-        // Income
-        $income = $this->cleanNumber($input['income']);
-
-        // Dependents
-        $dependents = $input['dependents'];
-
-        // Home value
         $homeValues = [
             'before' => $this->cleanNumber($input['home_value_before']),
             'after' => $this->cleanNumber($input['home_value_after'])
         ];
-
-        // Average Annual Expenditures
+        $income = $this->cleanNumber($input['income']);
+        $dependents = $input['dependents'];
+        $isMarried = (bool)$input['is_married'];
         $avgAnnualExpenditures = $this->getAvgAnnualExpenditures($income);
 
         // ------ VALIDATE INPUT ------
@@ -63,7 +53,7 @@ class Calculator
         foreach (['before', 'after'] as $key) {
             // Adjusted gross income
             $stateAbbrev = $stateAbbrevs[$key];
-            $agi = $this->getAGI($income, $dependents, $stateAbbrev);
+            $agi = $this->getAGI($income, $dependents, $isMarried, $stateAbbrev);
 
             // Taxes paid
             $stateId = $stateIds[$key];
@@ -206,12 +196,13 @@ class Calculator
      *
      * @param int $income Income in dollars
      * @param int $dependents Number of dependents
+     * @param bool $isMarried Is taxpayer married?
      * @param string $stateAbbrev State abbreviation
      * @return int
      */
-    public function getAGI($income, $dependents, $stateAbbrev)
+    public function getAGI($income, $dependents, $isMarried, $stateAbbrev)
     {
-        $exemptions = $this->getExemptionsTotal($dependents, $stateAbbrev);
+        $exemptions = $this->getExemptionsTotal($dependents, $isMarried, $stateAbbrev);
         $adjustedIncome = $income - $exemptions;
 
         return max(0, $adjustedIncome);
@@ -220,19 +211,22 @@ class Calculator
     /**
      * Returns the total exemptions in dollars, based on the number of dependents reported
      *
+     * These formulas are current as of 2017
+     *
      * @param int $dependents Number of dependents
+     * @param bool $isMarried Is the taxpayer married?
      * @param string $stateAbbrev State abbreviation
      * @return int
      * @throws NotFoundException
      */
-    public function getExemptionsTotal($dependents, $stateAbbrev)
+    public function getExemptionsTotal($dependents, $isMarried, $stateAbbrev)
     {
         if ($stateAbbrev === 'IN') {
-            return 1000 + (1500 * $dependents);
+            return (1500 * $dependents) + ($isMarried ? 1000 : 0) + 1000;
         }
 
         if ($stateAbbrev === 'IL') {
-            return 2000 + (2000 * $dependents);
+            return ($dependents + ($isMarried ? 1 : 0) + 1) * 2175;
         }
 
         throw new NotFoundException('State "' . $stateAbbrev . '" not recognized');
@@ -527,6 +521,8 @@ class Calculator
     /**
      * Returns the formula used to calculate tax exemptions for the specified state
      *
+     * These formulas are current as of 2017
+     *
      * @param string $stateAbbrev State abbreviation
      * @return string
      * @throws InternalErrorException
@@ -535,9 +531,9 @@ class Calculator
     {
         switch ($stateAbbrev) {
             case 'IN':
-                return "$1,000 + ($1,500 &times; number of dependents)";
+                return '$1,000 + (number of dependents &times; $1,500), + $1,000 if married';
             case 'IL':
-                return "$2,000 + ($2,000 &times; number of dependents)";
+                return '$2,175 &times; (1 + number of dependents), + $2,175 if married';
         }
 
         throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);

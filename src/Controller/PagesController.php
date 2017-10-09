@@ -54,7 +54,8 @@ class PagesController extends AppController
                     'home_value_before' => $this->request->getData('home-value-before'),
                     'home_value_after' => $this->request->getData('home-value-after'),
                     'income' => $this->request->getData('income'),
-                    'dependents' => $this->request->getData('dependents')
+                    'dependents' => $this->request->getData('dependents'),
+                    'is_married' => $this->request->getData('is_married')
                 ]);
                 $this->set($output);
                 $formulas = $calculator->getFormulas($output);
