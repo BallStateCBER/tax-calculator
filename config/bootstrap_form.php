@@ -12,6 +12,7 @@ return [
     'selectMultiple' => '<select class="form-control" name="{{name}}[]" multiple="multiple"{{attrs}}>{{content}}</select>',
     'input' => '<input class="form-control" type="{{type}}" name="{{name}}"{{attrs}} />',
     'textarea' => '<textarea class="form-control" name="{{name}}"{{attrs}}>{{value}}</textarea>',
+    'radioWrapper' => '<div class="radio">{{label}}</div>',
 
     /* defaults
     'button' => '<button{{attrs}}>{{text}}</button>',
