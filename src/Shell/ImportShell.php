@@ -25,6 +25,11 @@ class ImportShell extends Shell
         return $parser;
     }
 
+    /**
+     * Imports Illinois sales tax rates from a tab-delimited text file
+     *
+     * @return void
+     */
     public function iLSalesTax()
     {
         $file = new File(ROOT . DS . 'data' . DS . 'illinois-sales-tax-rates.txt');
