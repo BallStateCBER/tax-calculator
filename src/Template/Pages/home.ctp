@@ -55,8 +55,6 @@
             'value' => isset($dependents) ? $dependents : null
         ]); ?>
 
-        <img src="/data_center/img/loading_small.gif" alt="Loading" title="Loading" id="calc-loading" />
-
         <?= $this->Form->submit('Calculate Tax Savings') ?>
         <?= $this->Form->end() ?>
     </div>
