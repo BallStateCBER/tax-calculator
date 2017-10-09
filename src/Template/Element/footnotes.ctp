@@ -5,7 +5,6 @@
                 "Household Income assessed at imputed value less the applicable personal and dependency exemptions. CBER has excluded all Add-Backs, Deductions, Other Taxes, and exemptions for the blind and individuals over 65. CBER has also elected to exclude all Tax Credits for the purpose of calculating income tax due.",
                 "Household Income is defined as total receipts (salary, tips, professional fees, etc.) less non-income items, which is the equivalent to Federal adjusted gross income.",
                 "Indiana has an additional deduction for dependents under 18 of $1500 which is not included, but would apply to several dependency incidences.",
-                "Please include your spouse as a dependent."
             ]
         ],
         'Property Tax' => [
@@ -14,11 +13,10 @@
                 "In order to calculate the assessed home value, there is an adjustment for the Homestead Standard Deduction Credit and also the Supplemental Homestead Deduction. The assessed home value is then multiplied by the property tax rate. Although this adjustment is made to all participants, this adjustment is only made in reality if you qualify according to the Indiana Code. As required to qualify, your Indiana homestead must be your primary residence. Thus, our calculations are based on the premises that you receive the Homestead Standard Deduction Credit and also the Supplemental Homestead Deduction.",
                 "According to Indiana legislation, all property taxes have been capped at 1%. Thus, the maximum property tax bill for your homestead is equal to 1% of the home value.",
                 "Property taxes are calculated by district, thus the county rates are an estimate of the exact value. These rates do not include any local tax credits.",
-                "For La Porte County, we used a three year average (2007-2009) for the property tax rate.",
                 "CBER has not considered township-based property tax reliefs or tax cap increases due to referendum."
             ],
             'Illinois' => [
-                "Rates reflect the fact that residential property is assessed at 33% of its market value (excluding Cook County which is assessed at 16%).The rates are a percent of home value and reflect a five year average (2005-2009)."
+                "Rates reflect the fact that residential property is assessed at 33% of its market value (excluding Cook County which is assessed at 16%)."
             ]
         ],
         'Sales Tax' => [
