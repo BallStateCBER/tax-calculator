@@ -24,6 +24,9 @@ class ImportShell extends Shell
         $parser->addSubcommand('property_tax', [
             'help' => 'Imports property tax rates',
         ]);
+        $parser->addSubcommand('income_tax', [
+            'help' => 'Imports income tax rates',
+        ]);
 
         return $parser;
     }
@@ -130,7 +133,22 @@ class ImportShell extends Shell
      */
     public function propertyTax()
     {
-        $file = new File(ROOT . DS . 'data' . DS . 'property-tax-rates.txt');
+        $this->import('property-tax-rates.txt', TaxRatesTable::PROPERTY);
+    }
+
+    /**
+     * Imports data from the specified tab-delimited file, for the specified category
+     *
+     * Assumes the file's first row contains only a year, its second row contains an arbitrary header,
+     * and subsequent rows contain a FIPS code, then a county name, then a tax rate
+     *
+     * @param string $filename Filename for tab-delimited data file
+     * @param int $categoryId Category ID
+     * @return void
+     */
+    private function import($filename, $categoryId)
+    {
+        $file = new File(ROOT . DS . 'data' . DS . $filename);
         $contents = explode("\n", $file->read());
         $year = trim(array_shift($contents));
 
@@ -162,7 +180,7 @@ class ImportShell extends Shell
             $existingRecord = $taxRatesTable->find()
                 ->select(['value'])
                 ->where([
-                    'category_id' => TaxRatesTable::PROPERTY,
+                    'category_id' => $categoryId,
                     'loc_type' => 'county',
                     'loc_id' => $county->id,
                     'year' => $year
@@ -173,7 +191,7 @@ class ImportShell extends Shell
             if (!$existingRecord) {
                 // Insert
                 $newRecord = $taxRatesTable->newEntity([
-                    'category_id' => TaxRatesTable::PROPERTY,
+                    'category_id' => $categoryId,
                     'loc_type' => 'county',
                     'loc_id' => $county->id,
                     'value' => trim($taxRate),
