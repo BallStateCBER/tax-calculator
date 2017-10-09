@@ -65,6 +65,7 @@ class PagesController extends AppController
             $this->request = $this->request->withData('home-value-before', '250000');
             $this->request = $this->request->withData('home-value-after', '250000');
             $this->request = $this->request->withData('income', '55000');
+            $this->request = $this->request->withData('is_married', '0');
             $this->set([]);
         }
 

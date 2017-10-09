@@ -21,7 +21,8 @@ class CalculatorForm extends Form
             ->addField('home-value_before', 'number')
             ->addField('home-value-after', 'number')
             ->addField('income', 'number')
-            ->addField('dependents', 'number');
+            ->addField('dependents', 'number')
+            ->addField('is_married', 'boolean');
     }
 
     /**

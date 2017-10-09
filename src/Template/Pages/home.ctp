@@ -55,6 +55,15 @@
             'value' => isset($dependents) ? $dependents : null
         ]); ?>
 
+        <?= $this->Form->input('is_married', [
+            'label' => 'Are you married?',
+            'type' => 'radio',
+            'options' => [
+                1 => 'Yes',
+                0 => 'No'
+            ]
+        ]); ?>
+
         <?= $this->Form->submit('Calculate Tax Savings') ?>
         <?= $this->Form->end() ?>
     </div>
