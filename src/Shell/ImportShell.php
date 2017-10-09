@@ -19,7 +19,10 @@ class ImportShell extends Shell
     {
         $parser = parent::getOptionParser();
         $parser->addSubcommand('il_sales_tax', [
-            'help' => 'Checks and sends alerts for delayed jobs',
+            'help' => 'Imports Illinois sales tax rates',
+        ]);
+        $parser->addSubcommand('property_tax', [
+            'help' => 'Imports property tax rates',
         ]);
 
         return $parser;
@@ -114,6 +117,91 @@ class ImportShell extends Shell
                         $msg = $msgPrefix . 'Error updating tax rate ' . $changeMsg;
                         $this->abort($msg);
                     }
+                }
+            }
+        }
+        $this->out('Done');
+    }
+
+    /**
+     * Imports property tax rates from a tab-delimited text file
+     *
+     * @return void
+     */
+    public function propertyTax()
+    {
+        $file = new File(ROOT . DS . 'data' . DS . 'property-tax-rates.txt');
+        $contents = explode("\n", $file->read());
+        $year = trim(array_shift($contents));
+
+        // Remove header
+        array_shift($contents);
+
+        $countiesTable = TableRegistry::get('Counties');
+        $taxRatesTable = TableRegistry::get('TaxRates');
+        foreach ($contents as $row) {
+            if (trim($row) === '') {
+                continue;
+            }
+
+            $values = explode("\t", $row);
+
+            $fips = $values[0];
+            $countyName = $values[1];
+            $county = $countiesTable->find()
+                ->select(['id'])
+                ->where(['fips' => $fips])
+                ->first();
+            if (!$county) {
+                $this->abort('Unknown county: ' . $countyName . ' (' . $fips . ')');
+            }
+
+            $taxRate = str_replace('%', '', $values[2]);
+
+            /** @var TaxRate $existingRecord */
+            $existingRecord = $taxRatesTable->find()
+                ->select(['value'])
+                ->where([
+                    'category_id' => TaxRatesTable::PROPERTY,
+                    'loc_type' => 'county',
+                    'loc_id' => $county->id,
+                    'year' => $year
+                ])
+                ->first();
+
+            $msgPrefix = $msg = $countyName . ' County (' . $fips . '): ';
+            if (!$existingRecord) {
+                // Insert
+                $newRecord = $taxRatesTable->newEntity([
+                    'category_id' => TaxRatesTable::PROPERTY,
+                    'loc_type' => 'county',
+                    'loc_id' => $county->id,
+                    'value' => trim($taxRate),
+                    'year' => $year
+                ]);
+                if ($newRecord->getErrors()) {
+                    $msg = $msgPrefix . 'Error adding tax rate of ' . $taxRate;
+                    $this->abort($msg);
+                } elseif ($taxRatesTable->save($newRecord)) {
+                    $msg = $msgPrefix . 'Added tax rate of ' . $taxRate;
+                    $this->out($msg);
+                } else {
+                    $msg = $msgPrefix . 'Error saving tax rate of ' . $taxRate;
+                    $this->abort($msg);
+                }
+            } elseif ($existingRecord->value != $taxRate) {
+                // Update
+                $originalValue = $existingRecord->value;
+                $existingRecord = $taxRatesTable->patchEntity($existingRecord, [
+                    'value' => trim($taxRate)
+                ]);
+                $changeMsg = 'from  ' . $originalValue . ' to ' . $taxRate;
+                if ($taxRatesTable->save($existingRecord)) {
+                    $msg = $msgPrefix . 'Updated tax rate ' . $changeMsg;
+                    $this->out($msg);
+                } else {
+                    $msg = $msgPrefix . 'Error updating tax rate ' . $changeMsg;
+                    $this->abort($msg);
                 }
             }
         }
