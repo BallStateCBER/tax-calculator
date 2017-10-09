@@ -1,7 +1,7 @@
 <div id="output-wrapper">
-    <h2>
+    <h1 class="page-header">
         Estimated Annual Tax Savings
-    </h2>
+    </h1>
     <table class="calc-output table">
         <thead>
             <tr>
