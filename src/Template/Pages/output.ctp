@@ -2,6 +2,11 @@
     <h1 class="page-header">
         Estimated Annual Tax Savings
     </h1>
+
+    <a href="/" class="btn btn-primary btn-lg">
+        &larr; Go back
+    </a>
+
     <table class="calc-output table">
         <thead>
             <tr>
