@@ -12,10 +12,14 @@
             <tr>
                 <td></td>
                 <th class="display_mode">
-                    Moving from <?= $countyName['before'] ?>
+                    Moving from
+                    <br />
+                    <?= $countyName['before'] ?>
                 </th>
                 <th class="display_mode">
-                    Moving to <?= $countyName['after'] ?>
+                    Moving to
+                    <br />
+                    <?= $countyName['after'] ?>
                 </th>
             </tr>
         </thead>
