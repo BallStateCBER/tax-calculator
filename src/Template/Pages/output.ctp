@@ -12,10 +12,10 @@
             <tr>
                 <td></td>
                 <th class="display_mode">
-                    Moving from <?= $countyName['before'] ?> County, IL
+                    Moving from <?= $countyName['before'] ?>
                 </th>
                 <th class="display_mode">
-                    Moving to <?= $countyName['after'] ?> County, IN
+                    Moving to <?= $countyName['after'] ?>
                 </th>
             </tr>
         </thead>
