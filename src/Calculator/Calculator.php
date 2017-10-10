@@ -289,11 +289,10 @@ class Calculator
         $rate = $taxRatesTable->getPropertyTaxRate($countyId);
         $netAhv = $this->getNetAHV($homeValue, $stateAbbrev);
         $uncappedValue = $netAhv * ($rate / 100);
+        $cappedValue = $homeValue * 0.01;
 
         switch ($stateAbbrev) {
             case 'IN':
-                $cappedValue = $homeValue * 0.01;
-
                 return min($uncappedValue, $cappedValue);
             case 'IL':
                 return $uncappedValue;
