@@ -314,7 +314,7 @@ class Calculator
         switch ($stateAbbrev) {
             case 'IN':
                 // Remainder home value
-                $rv = $this->getRV($homeValue, $stateAbbrev);
+                $rv = $this->getRHV($homeValue, $stateAbbrev);
 
                 // Supplemental homestead deduction
                 $shd = $this->getSHD($homeValue, $stateAbbrev);
@@ -328,14 +328,14 @@ class Calculator
     }
 
     /**
-     * Returns remainder value (after standard deduction)
+     * Returns remainder home value (after standard deduction)
      *
      * @param int $homeValue Value of home in dollars
      * @param string $stateAbbrev State abbreviation
      * @return float|int
      * @throws NotFoundException
      */
-    public function getRV($homeValue, $stateAbbrev)
+    public function getRHV($homeValue, $stateAbbrev)
     {
         switch ($stateAbbrev) {
             case 'IN':
@@ -359,7 +359,7 @@ class Calculator
     {
         switch ($stateAbbrev) {
             case 'IN':
-                $rv = $this->getRV($homeValue, $stateAbbrev);
+                $rv = $this->getRHV($homeValue, $stateAbbrev);
                 if ($rv <= 600000) {
                     return ($rv * .35);
                 }
@@ -550,7 +550,7 @@ class Calculator
     {
         switch ($stateAbbrev) {
             case 'IN':
-                return ($this->getRV($homeValue, $stateAbbrev) <= 600000)
+                return ($this->getRHV($homeValue, $stateAbbrev) <= 600000)
                     ? '35% of RHV'
                     : '$210,000 + 25% of (RHV - $600,000)';
             case 'IL':
