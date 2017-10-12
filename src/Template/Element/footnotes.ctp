@@ -16,7 +16,7 @@
                 "CBER has not considered township-based property tax reliefs or tax cap increases due to referendum."
             ],
             'Illinois' => [
-                "Rates reflect the fact that residential property is assessed at 33% of its market value (excluding Cook County which is assessed at 16%)."
+                "Rates reflect the fact that residential property is assessed at 33% of its market value (excluding Cook County which is assessed at 10%)."
             ]
         ],
         'Sales Tax' => [
