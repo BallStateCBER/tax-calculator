@@ -339,7 +339,7 @@ class Calculator
     {
         switch ($stateAbbrev) {
             case 'IN':
-                return ($homeValue < 75000) ? ($homeValue * .6) : ($homeValue - 45000);
+                return $homeValue - min($homeValue * .6, 45000);
             case 'IL':
                 return $homeValue;
             default:
@@ -490,7 +490,7 @@ class Calculator
 
             // Property taxes
             $homeValue = $homeValues[$key];
-            $formulas['rhv'][$key] = $this->getRHVFormula($homeValue, $state);
+            $formulas['rhv'][$key] = $this->getRHVFormula($state);
             $formulas['shd'][$key] = $this->getSHDFormula($homeValue, $state);
             $formulas['net_ahv'][$key] = $this->getAHVFormula($state);
             $propertyTaxRate = $taxRatesTable->getPropertyTaxRate($countyId);
@@ -563,18 +563,15 @@ class Calculator
     /**
      * Returns the formula used to calculate Remainder Home Value
      *
-     * @param int $homeValue Home value in dollars
      * @param string $stateAbbrev State abbreviation
      * @return string
      * @throws InternalErrorException
      */
-    public function getRHVFormula($homeValue, $stateAbbrev)
+    public function getRHVFormula($stateAbbrev)
     {
         switch ($stateAbbrev) {
             case 'IN':
-                return ($homeValue < 75000)
-                    ? "60% of home value"
-                    : "home value - $45,000";
+                return 'Home value - (60% of home value, capped at $45,000)';
             case 'IL':
                 return '';
         }
