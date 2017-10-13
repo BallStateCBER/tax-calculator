@@ -500,7 +500,7 @@ class Calculator
                     $formulas['taxes']['property'][$key] = min($percent , 1). '% of Net AHV';
                     break;
                 case 'IL':
-                    $formulas['taxes']['property'][$key] = $percent . '% of home value';
+                    $formulas['taxes']['property'][$key] = $percent . '% of Net AHV';
                     break;
             }
 
