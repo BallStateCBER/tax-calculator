@@ -1,6 +1,7 @@
 <?php
 namespace App\Calculator;
 
+use App\Model\Table\CountiesTable;
 use App\Model\Table\StatesTable;
 use App\Model\Table\TaxRatesTable;
 use Cake\Network\Exception\InternalErrorException;
@@ -287,7 +288,7 @@ class Calculator
         /** @var TaxRatesTable $taxRatesTable */
         $taxRatesTable = TableRegistry::get('TaxRates');
         $rate = $taxRatesTable->getPropertyTaxRate($countyId);
-        $netAhv = $this->getNetAHV($homeValue, $stateAbbrev);
+        $netAhv = $this->getNetAHV($homeValue, $countyId, $stateAbbrev);
         $uncappedValue = $netAhv * ($rate / 100);
         $cappedValue = $homeValue * 0.01;
 
@@ -305,11 +306,12 @@ class Calculator
      * Returns net adjusted home value
      *
      * @param int $homeValue Value of home in dollars
+     * @param int $countyId County ID
      * @param string $stateAbbrev State abbreviation
      * @return int|float
      * @throws NotFoundException
      */
-    public function getNetAHV($homeValue, $stateAbbrev)
+    public function getNetAHV($homeValue, $countyId, $stateAbbrev)
     {
         switch ($stateAbbrev) {
             case 'IN':
@@ -321,7 +323,7 @@ class Calculator
 
                 return $rv - $shd;
             case 'IL':
-                return $homeValue;
+                return $homeValue * ($countyId == CountiesTable::COOK_COUNTY ? 0.1 : 0.333);
             default:
                 throw new NotFoundException('Unsupported state: ' . $stateAbbrev);
         }
@@ -492,7 +494,7 @@ class Calculator
             $homeValue = $homeValues[$key];
             $formulas['rhv'][$key] = $this->getRHVFormula($state);
             $formulas['shd'][$key] = $this->getSHDFormula($homeValue, $state);
-            $formulas['net_ahv'][$key] = $this->getAHVFormula($state);
+            $formulas['net_ahv'][$key] = $this->getAHVFormula($countyId, $state);
             $propertyTaxRate = $taxRatesTable->getPropertyTaxRate($countyId);
             $percent = round($propertyTaxRate, 2);
             switch ($state) {
@@ -582,17 +584,18 @@ class Calculator
     /**
      * Returns the formula used to calculate Net Adjusted Home Value
      *
+     * @param int $countyId County ID
      * @param string $stateAbbrev State abbreviation
      * @return string
      * @throws InternalErrorException
      */
-    public function getAHVFormula($stateAbbrev)
+    public function getAHVFormula($countyId, $stateAbbrev)
     {
         switch ($stateAbbrev) {
             case 'IN':
                 return 'RHV - SHD';
             case 'IL':
-                return '';
+                return ($countyId == CountiesTable::COOK_COUNTY ? '10%' : '33.3%') . ' of home value';
         }
 
         throw new InternalErrorException('Unsupported state: ' . $stateAbbrev);

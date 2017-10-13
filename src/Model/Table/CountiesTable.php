@@ -19,6 +19,7 @@ use Cake\Validation\Validator;
  */
 class CountiesTable extends Table
 {
+    const COOK_COUNTY = 108;
 
     /**
      * Initialize method
