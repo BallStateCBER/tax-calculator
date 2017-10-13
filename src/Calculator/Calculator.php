@@ -289,14 +289,12 @@ class Calculator
         $taxRatesTable = TableRegistry::get('TaxRates');
         $rate = $taxRatesTable->getPropertyTaxRate($countyId);
         $netAhv = $this->getNetAHV($homeValue, $countyId, $stateAbbrev);
-        $uncappedValue = $netAhv * ($rate / 100);
-        $cappedValue = $homeValue * 0.01;
 
         switch ($stateAbbrev) {
             case 'IN':
-                return min($uncappedValue, $cappedValue);
+                return $netAhv * min(($rate / 100), 0.01);
             case 'IL':
-                return $uncappedValue;
+                return $netAhv * ($rate / 100);
             default:
                 throw new NotFoundException('Unsupported state: ' . $stateAbbrev);
         }
@@ -499,7 +497,7 @@ class Calculator
             $percent = round($propertyTaxRate, 2);
             switch ($state) {
                 case 'IN':
-                    $formulas['taxes']['property'][$key] = $percent . '% of Net AHV (capped at 1% of home value)';
+                    $formulas['taxes']['property'][$key] = min($percent , 1). '% of Net AHV';
                     break;
                 case 'IL':
                     $formulas['taxes']['property'][$key] = $percent . '% of home value';
