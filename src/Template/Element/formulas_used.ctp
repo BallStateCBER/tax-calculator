@@ -1,3 +1,10 @@
+<?php
+    /**
+     * @var string $countyName
+     * @var array $formulas
+     * @var string[] $salesTaxTypes
+     */
+?>
 <div id="formulas-used">
 	<div>
 		<div>
