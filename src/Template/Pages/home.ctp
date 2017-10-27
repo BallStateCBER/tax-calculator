@@ -1,3 +1,11 @@
+<?php
+/**
+ * @var \Cake\View\View $this
+ * @var \App\Form\CalculatorForm $calculatorForm
+ * @var string[] $counties
+ */
+?>
+
 <div id="calc-input" class="row">
     <div class="col-sm-4 col-md-offset-4">
         <?= $this->Form->create($calculatorForm, ['id' => 'calculator-input']); ?>
