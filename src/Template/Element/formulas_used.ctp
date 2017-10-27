@@ -1,6 +1,6 @@
 <?php
     /**
-     * @var string $countyName
+     * @var string[] $countyName
      * @var array $formulas
      * @var string[] $salesTaxTypes
      */
