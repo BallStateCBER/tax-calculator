@@ -40,9 +40,9 @@
         }
     },
     "scripts": {
-        "post-install-cmd": "App\\Console\\Installer::postUpdate",
-        "post-package-update": "App\\Console\\Installer::postUpdate",
-        "post-create-project-cmd": "App\\Console\\Installer::postInstall",
+        "post-package-install": "DataCenter\\Console\\Installer::postUpdate",
+        "post-package-update": "DataCenter\\Console\\Installer::postUpdate",
+        "post-create-project-cmd": "DataCenter\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
         "check": [
             "@test",
