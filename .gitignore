@@ -10,7 +10,7 @@
 /webroot/coverage/*
 /build/logs/*
 
-#PhpStorm
+# PhpStorm
 .idea/*
 
 # External tool builders
@@ -33,3 +33,6 @@ composer.phar
 
 # Code coverage report
 /build/logs/clover.xml
+
+# Other
+error_log
