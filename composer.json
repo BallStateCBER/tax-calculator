@@ -29,7 +29,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
-            "DataCenter\\": "./vendor/ballstatecber/datacenter/src"
+            "DataCenter\\": "./vendor/ballstatecber/datacenter-plugin-cakephp3/src"
         }
     },
     "autoload-dev": {
