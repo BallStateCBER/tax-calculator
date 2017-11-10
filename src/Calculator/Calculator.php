@@ -17,7 +17,8 @@ class Calculator
      *     from_county, to_county, income, dependents, home_value_before, home_value_after
      * @return array
      */
-    public function calculate($input) {
+    public function calculate($input)
+    {
         $countyIds = [
             'before' => $input['from_county'],
             'after' => $input['to_county']
@@ -497,7 +498,7 @@ class Calculator
             $percent = round($propertyTaxRate, 2);
             switch ($state) {
                 case 'IN':
-                    $formulas['taxes']['property'][$key] = min($percent , 1). '% of Net AHV';
+                    $formulas['taxes']['property'][$key] = min($percent, 1) . '% of Net AHV';
                     break;
                 case 'IL':
                     $formulas['taxes']['property'][$key] = $percent . '% of Net AHV';
@@ -514,6 +515,7 @@ class Calculator
                 $formulas['expenditures'][$salesTaxType] = $eRate . '% of income';
             }
         }
+
         return $formulas;
     }
 
