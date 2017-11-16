@@ -28,6 +28,20 @@ use Cake\View\Exception\MissingTemplateException;
 class PagesControllerTest extends IntegrationTestCase
 {
     /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->configRequest([
+            'environment' => ['HTTPS' => 'on']
+        ]);
+    }
+
+    /**
      * testMultipleGet method
      *
      * @return void
@@ -38,19 +52,6 @@ class PagesControllerTest extends IntegrationTestCase
         $this->assertResponseOk();
         $this->get('/');
         $this->assertResponseOk();
-    }
-
-    /**
-     * testDisplay method
-     *
-     * @return void
-     */
-    public function testDisplay()
-    {
-        $this->get('/pages/home');
-        $this->assertResponseOk();
-        $this->assertResponseContains('CakePHP');
-        $this->assertResponseContains('<html>');
     }
 
     /**
@@ -65,33 +66,5 @@ class PagesControllerTest extends IntegrationTestCase
 
         $this->assertResponseError();
         $this->assertResponseContains('Error');
-    }
-
-    /**
-     * Test that missing template in debug mode renders missing_template error page
-     *
-     * @return void
-     */
-    public function testMissingTemplateInDebug()
-    {
-        Configure::write('debug', true);
-        $this->get('/pages/not_existing');
-
-        $this->assertResponseFailure();
-        $this->assertResponseContains('Missing Template');
-        $this->assertResponseContains('Stacktrace');
-        $this->assertResponseContains('not_existing.ctp');
-    }
-
-    /**
-     * Test directory traversal protection
-     *
-     * @return void
-     */
-    public function testDirectoryTraversalProtection()
-    {
-        $this->get('/pages/../Layout/ajax');
-        $this->assertResponseCode(403);
-        $this->assertResponseContains('Forbidden');
     }
 }
