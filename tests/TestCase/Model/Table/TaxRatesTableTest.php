@@ -25,8 +25,7 @@ class TaxRatesTableTest extends TestCase
      */
     public $fixtures = [
         'app.tax_rates',
-        'app.locs',
-        'app.categories'
+        'app.data_categories'
     ];
 
     /**
