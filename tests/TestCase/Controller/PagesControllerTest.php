@@ -27,6 +27,10 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesControllerTest extends IntegrationTestCase
 {
+    public $fixtures = [
+        'app.counties'
+    ];
+
     /**
      * setUp method
      *
