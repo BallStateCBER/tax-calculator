@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use App\Calculator\Calculator;
 use App\Form\CalculatorForm;
+use Cake\Http\Response;
 
 /**
  * Static content controller
@@ -29,7 +30,7 @@ class PagesController extends AppController
     /**
      * Displays the home page
      *
-     * @return void
+     * @return Response
      */
     public function home()
     {
@@ -44,29 +45,30 @@ class PagesController extends AppController
         }
 
         $calculatorForm = new CalculatorForm();
-
         if ($this->request->is('post')) {
             $calculator = new Calculator($this->request->getData());
             if ($calculatorForm->validate($this->request->getData())) {
                 $this->set('calculator', $calculator);
-                $this->render('output');
-            }
-        } else {
-            $defaultData = [
-                'home-value-before' => '250000',
-                'home-value-after' => '250000',
-                'income' => '55000',
-                'is_married' => '0'
-            ];
-            foreach ($defaultData as $var => $val) {
-                $this->request = $this->request->withData($var, $val);
+
+                return $this->render('output');
             }
         }
 
+        $defaultData = [
+            'home-value-before' => '250000',
+            'home-value-after' => '250000',
+            'income' => '55000',
+            'is_married' => '0'
+        ];
+        foreach ($defaultData as $var => $val) {
+            $this->request = $this->request->withData($var, $val);
+        }
         $this->set([
             'calculatorForm' => $calculatorForm,
             'counties' => $counties,
             'title_for_layout' => ''
         ]);
+
+        return $this->render('input');
     }
 }
