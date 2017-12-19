@@ -43,6 +43,8 @@ class Calculator
 
     public $taxes = [];
 
+    public $savings = [];
+
     /**
      * Calculator constructor
      *
@@ -70,6 +72,7 @@ class Calculator
         $this->dependents = $data['dependents'];
         $this->isMarried = (bool)$data['is_married'];
         $this->taxes = $this->calculateTaxes();
+        $this->savings = $this->calculateSavings();
     }
 
     /**
@@ -124,19 +127,28 @@ class Calculator
     }
 
     /**
+     * Calculates the minimum and maximum tax savings from moving
+     *
+     * @return array
+     */
+    public function calculateSavings()
+    {
+        $before = $this->taxes['total']['before'];
+        $after = $this->taxes['total']['after'];
+
+        return [
+            'min' => $before['min'] - $after['max'],
+            'max' => $before['max'] - $after['min']
+        ];
+    }
+
+    /**
      * Conducts tax savings calculation and returns various output
      *
      * @return array
      */
     public function calculate()
     {
-        // Total savings
-        $before = $this->taxes['total']['before'];
-        $after = $this->taxes['total']['after'];
-        $savings = [
-            'min' => $before['min'] - $after['max'],
-            'max' => $before['max'] - $after['min']
-        ];
 
         return [
             'avgAnnualExpenditures' => $this->getAvgAnnualExpenditures(),
@@ -146,7 +158,7 @@ class Calculator
             'homeValues' => $this->homeValues,
             'income' => $this->income,
             'salesTaxTypes' => $this->getSalesTaxTypes(),
-            'savings' => $savings,
+            'savings' => $this->savings,
             'stateAbbrevs' => $this->stateAbbrevs,
             'stateIds' => $this->stateIds,
             'taxes' => $this->taxes
