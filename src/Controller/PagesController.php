@@ -50,8 +50,7 @@ class PagesController extends AppController
             if ($calculatorForm->validate($this->request->getData())) {
                 $output = $calculator->calculate();
                 $this->set($output);
-                $formulas = $calculator->getFormulas($output);
-                $this->set('formulas', $formulas);
+                $this->set('calculator', $calculator);
                 $this->render('output');
             }
         } else {

@@ -149,7 +149,6 @@ class Calculator
      */
     public function calculate()
     {
-
         return [
             'avgAnnualExpenditures' => $this->getAvgAnnualExpenditures(),
             'countyIds' => $this->countyIds,
@@ -491,17 +490,10 @@ class Calculator
     /**
      * Generates formulas that explain to the user how our calculations are made
      *
-     * @param array $input Array of parameters
      * @return array
      */
-    public function getFormulas($input)
+    public function getFormulas()
     {
-        /**
-         * @var $savings
-         * @var $taxes
-         */
-        extract($input);
-
         $formulas = [];
 
         $formulas['aae'] = $this->getAvgAnnualExpendituresPercent() . '% of income';

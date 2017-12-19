@@ -3,7 +3,9 @@
      * @var string[] $countyName
      * @var array $formulas
      * @var string[] $salesTaxTypes
+     * @var \App\Calculator\Calculator $calculator
      */
+    $formulas = $calculator->getFormulas();
 ?>
 <div id="formulas-used">
 	<div>
