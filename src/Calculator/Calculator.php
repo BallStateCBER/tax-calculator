@@ -15,6 +15,11 @@ class Calculator
         'after' => null
     ];
 
+    public $countyNames = [
+        'before' => null,
+        'after' => null
+    ];
+
     public $stateIds = [
         'before' => StatesTable::ILLINOIS,
         'after' => StatesTable::INDIANA
@@ -42,10 +47,18 @@ class Calculator
             'before' => $data['from-county'],
             'after' => $data['to-county']
         ];
+
+        $countiesTable = TableRegistry::get('Counties');
+        foreach (['before', 'after'] as $key) {
+            $county = $countiesTable->get($this->countyIds[$key]);
+            $this->countyNames[$key] = $county->name . ' County, ' . $this->stateAbbrevs[$key];
+        }
+
         $this->homeValues = [
             'before' => $this->cleanNumber($data['home-value-before']),
             'after' => $this->cleanNumber($data['home-value-after'])
         ];
+
         $this->income = $this->cleanNumber($data['income']);
         $this->dependents = $data['dependents'];
         $this->isMarried = (bool)$data['is_married'];
@@ -58,18 +71,6 @@ class Calculator
      */
     public function calculate()
     {
-        $avgAnnualExpenditures = $this->getAvgAnnualExpenditures();
-
-        // ------ VALIDATE INPUT ------
-        // Validate counties by attempting to retrieve their names
-        $countyName = [];
-        $countiesTable = TableRegistry::get('Counties');
-        foreach (['before', 'after'] as $key) {
-            $county = $countiesTable->get($this->countyIds[$key]);
-            $countyName[$key] = $county->name . ' County, ' . $this->stateAbbrevs[$key];
-        }
-
-        // ------ GENERATE OUTPUT ------
         $taxes = [];
         $salesTaxTypes = $this->getSalesTaxTypes();
         foreach (['before', 'after'] as $key) {
@@ -120,9 +121,9 @@ class Calculator
         ];
 
         return [
-            'avgAnnualExpenditures' => $avgAnnualExpenditures,
+            'avgAnnualExpenditures' => $this->getAvgAnnualExpenditures(),
             'countyIds' => $this->countyIds,
-            'countyName' => $countyName,
+            'countyName' => $this->countyNames,
             'dependents' => $this->dependents,
             'homeValues' => $this->homeValues,
             'income' => $this->income,
@@ -466,9 +467,6 @@ class Calculator
     public function getFormulas($input)
     {
         /**
-         * @var $avgAnnualExpenditures
-         * @var $countyName
-         * @var $salesTaxTypes
          * @var $savings
          * @var $taxes
          */
@@ -509,7 +507,7 @@ class Calculator
                     break;
             }
 
-            foreach ($salesTaxTypes as $salesTaxType) {
+            foreach ($this->getSalesTaxTypes() as $salesTaxType) {
                 $eRate = $this->getExpenditureRate($salesTaxType);
                 $taxRates = $taxRatesTable->getSalesTaxRate($salesTaxType, $state, $countyId);
                 $taxRateString = $taxRates['min'] == $taxRates['max']

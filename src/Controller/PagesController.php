@@ -55,11 +55,15 @@ class PagesController extends AppController
                 $this->render('output');
             }
         } else {
-            $this->request = $this->request->withData('home-value-before', '250000');
-            $this->request = $this->request->withData('home-value-after', '250000');
-            $this->request = $this->request->withData('income', '55000');
-            $this->request = $this->request->withData('is_married', '0');
-            $this->set([]);
+            $defaultData = [
+                'home-value-before' => '250000',
+                'home-value-after' => '250000',
+                'income' => '55000',
+                'is_married' => '0'
+            ];
+            foreach ($defaultData as $var => $val) {
+                $this->request = $this->request->withData($var, $val);
+            }
         }
 
         $this->set([
