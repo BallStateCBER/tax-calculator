@@ -48,7 +48,7 @@ class Calculator
     /**
      * Calculator constructor
      *
-     * @param $data
+     * @param array $data Result of $request->getData()
      */
     public function __construct($data)
     {
