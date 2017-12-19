@@ -41,6 +41,8 @@ class Calculator
 
     public $isMarried = false;
 
+    public $taxes = [];
+
     public function __construct($data)
     {
         $this->countyIds = [
@@ -62,14 +64,15 @@ class Calculator
         $this->income = $this->cleanNumber($data['income']);
         $this->dependents = $data['dependents'];
         $this->isMarried = (bool)$data['is_married'];
+        $this->taxes = $this->calculateTaxes();
     }
 
     /**
-     * Conducts tax savings calculation and returns various output
+     * Returns an array of all estimated taxes paid before and after moving
      *
      * @return array
      */
-    public function calculate()
+    public function calculateTaxes()
     {
         $taxes = [];
         $salesTaxTypes = $this->getSalesTaxTypes();
@@ -112,9 +115,19 @@ class Calculator
             }
         }
 
+        return $taxes;
+    }
+
+    /**
+     * Conducts tax savings calculation and returns various output
+     *
+     * @return array
+     */
+    public function calculate()
+    {
         // Total savings
-        $before = $taxes['total']['before'];
-        $after = $taxes['total']['after'];
+        $before = $this->taxes['total']['before'];
+        $after = $this->taxes['total']['after'];
         $savings = [
             'min' => $before['min'] - $after['max'],
             'max' => $before['max'] - $after['min']
@@ -127,11 +140,11 @@ class Calculator
             'dependents' => $this->dependents,
             'homeValues' => $this->homeValues,
             'income' => $this->income,
-            'salesTaxTypes' => $salesTaxTypes,
+            'salesTaxTypes' => $this->getSalesTaxTypes(),
             'savings' => $savings,
             'stateAbbrevs' => $this->stateAbbrevs,
             'stateIds' => $this->stateIds,
-            'taxes' => $taxes
+            'taxes' => $this->taxes
         ];
     }
 
