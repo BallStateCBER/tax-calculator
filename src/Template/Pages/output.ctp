@@ -1,3 +1,7 @@
+<?php
+    /** @var \App\Calculator\Calculator $calculator */
+?>
+
 <div id="output-wrapper">
     <h1 class="page-header">
         Estimated Annual Tax Savings
@@ -14,12 +18,12 @@
                 <th class="display_mode">
                     Moving from
                     <br />
-                    <?= $countyName['before'] ?>
+                    <?= $calculator->countyNames['before'] ?>
                 </th>
                 <th class="display_mode">
                     Moving to
                     <br />
-                    <?= $countyName['after'] ?>
+                    <?= $calculator->countyNames['after'] ?>
                 </th>
             </tr>
         </thead>
@@ -28,24 +32,24 @@
             <tr>
                 <th>Household Income</th>
                 <td class="display_mode">
-                    <?= $this->Calculator->moneyFormat($income) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->income) ?>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <th>Dependents</th>
                 <td class="display_mode">
-                    <?= $dependents ?>
+                    <?= $calculator->dependents ?>
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <th>Home Value</th>
                 <td class="display_mode">
-                    <?= $this->Calculator->moneyFormat($homeValues['before']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->homeValues['before']) ?>
                 </td>
                 <td class="display_mode">
-                    <?= $this->Calculator->moneyFormat($homeValues['after']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->homeValues['after']) ?>
                 </td>
             </tr>
         </tbody>
@@ -55,10 +59,10 @@
                     State taxes
                 </th>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['state']['before']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['state']['before']) ?>
                 </td>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['state']['after']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['state']['after']) ?>
                 </td>
             </tr>
             <tr>
@@ -66,10 +70,10 @@
                     County taxes
                 </th>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['county']['before']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['county']['before']) ?>
                 </td>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['county']['after']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['county']['after']) ?>
                 </td>
             </tr>
             <tr>
@@ -77,10 +81,10 @@
                     Property taxes
                 </th>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['property']['before']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['property']['before']) ?>
                 </td>
                 <td>
-                    <?= $this->Calculator->moneyFormat($taxes['property']['after']) ?>
+                    <?= $this->Calculator->moneyFormat($calculator->taxes['property']['after']) ?>
                 </td>
             </tr>
             <tr>
@@ -91,13 +95,13 @@
                 </th>
                 <td>
                     <?php
-                        $before = $taxes['sales']['total']['before'];
+                        $before = $calculator->taxes['sales']['total']['before'];
                         echo $this->Calculator->formatMinMaxValue($before['min'], $before['max']);
                     ?>
                 </td>
                 <td>
                     <?php
-                        $after = $taxes['sales']['total']['after'];
+                        $after = $calculator->taxes['sales']['total']['after'];
                         echo $this->Calculator->formatMinMaxValue($after['min'], $after['max']);
                     ?>
                 </td>
@@ -109,20 +113,20 @@
             <thead></thead>
             <tfoot></tfoot>
             <tbody>
-                <?php foreach ($salesTaxTypes as $salesTaxType): ?>
+                <?php foreach ($calculator->getSalesTaxTypes() as $salesTaxType): ?>
                     <tr>
                         <th>
                             On <?= $salesTaxType ?>
                         </th>
                         <td>
                             <?php
-                                $before = $taxes['sales'][$salesTaxType]['before'];
+                                $before = $calculator->taxes['sales'][$salesTaxType]['before'];
                                 echo $this->Calculator->formatMinMaxValue($before['min'], $before['max']);
                             ?>
                         </td>
                         <td>
                             <?php
-                                $after = $taxes['sales'][$salesTaxType]['after'];
+                                $after = $calculator->taxes['sales'][$salesTaxType]['after'];
                                 echo $this->Calculator->formatMinMaxValue($after['min'], $after['max']);
                             ?>
                         </td>
@@ -139,7 +143,7 @@
                 Annual tax savings
             </th>
             <td colspan="2">
-                <?= $this->Calculator->formatMinMaxValue($savings['min'], $savings['max']) ?>
+                <?= $this->Calculator->formatMinMaxValue($calculator->savings['min'], $calculator->savings['max']) ?>
             </td>
         </tr>
         </tfoot>
@@ -150,13 +154,13 @@
             </th>
             <td>
                 <?php
-                    $before = $taxes['total']['before'];
+                    $before = $calculator->taxes['total']['before'];
                     echo $this->Calculator->formatMinMaxValue($before['min'], $before['max']);
                 ?>
             </td>
             <td>
                 <?php
-                    $after = $taxes['total']['after'];
+                    $after = $calculator->taxes['total']['after'];
                     echo $this->Calculator->formatMinMaxValue($after['min'], $after['max']);
                 ?>
             </td>

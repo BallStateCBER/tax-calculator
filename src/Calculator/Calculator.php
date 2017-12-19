@@ -143,28 +143,6 @@ class Calculator
     }
 
     /**
-     * Conducts tax savings calculation and returns various output
-     *
-     * @return array
-     */
-    public function calculate()
-    {
-        return [
-            'avgAnnualExpenditures' => $this->getAvgAnnualExpenditures(),
-            'countyIds' => $this->countyIds,
-            'countyName' => $this->countyNames,
-            'dependents' => $this->dependents,
-            'homeValues' => $this->homeValues,
-            'income' => $this->income,
-            'salesTaxTypes' => $this->getSalesTaxTypes(),
-            'savings' => $this->savings,
-            'stateAbbrevs' => $this->stateAbbrevs,
-            'stateIds' => $this->stateIds,
-            'taxes' => $this->taxes
-        ];
-    }
-
-    /**
      * Takes a string and strips it to just a whole number (e.g. $50,000.99 -> 50000)
      *
      * @param string $number Numeric string

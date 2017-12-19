@@ -48,8 +48,6 @@ class PagesController extends AppController
         if ($this->request->is('post')) {
             $calculator = new Calculator($this->request->getData());
             if ($calculatorForm->validate($this->request->getData())) {
-                $output = $calculator->calculate();
-                $this->set($output);
                 $this->set('calculator', $calculator);
                 $this->render('output');
             }

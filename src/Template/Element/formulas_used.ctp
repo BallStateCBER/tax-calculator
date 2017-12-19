@@ -1,10 +1,5 @@
 <?php
-    /**
-     * @var string[] $countyName
-     * @var array $formulas
-     * @var string[] $salesTaxTypes
-     * @var \App\Calculator\Calculator $calculator
-     */
+    /** @var \App\Calculator\Calculator $calculator */
     $formulas = $calculator->getFormulas();
 ?>
 <div id="formulas-used">
@@ -17,12 +12,12 @@
 						<th>
 							Moving from
                             <br />
-							<?= $countyName['before'] ?>
+							<?= $calculator->countyNames['before'] ?>
 						</th>
 						<th>
 							Moving to
                             <br />
-							<?= $countyName['after'] ?>
+							<?= $calculator->countyNames['after'] ?>
 						</th>
 					</tr>
 				</thead>
@@ -126,7 +121,7 @@
                             <?= $formulas['aae'] ?>
                         </td>
 					</tr>
-					<?php foreach ($salesTaxTypes as $salesTaxType): ?>
+					<?php foreach ($calculator->getSalesTaxTypes() as $salesTaxType): ?>
 						<tr>
 							<th colspan="3" class="sales-tax-type">
 								<?= ucfirst($salesTaxType) ?>
