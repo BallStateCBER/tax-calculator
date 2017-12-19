@@ -10,43 +10,63 @@ use Cake\ORM\TableRegistry;
 
 class Calculator
 {
+    public $countyIds = [
+        'before' => null,
+        'after' => null
+    ];
+
+    public $stateIds = [
+        'before' => StatesTable::ILLINOIS,
+        'after' => StatesTable::INDIANA
+    ];
+
+    public $stateAbbrevs = [
+        'before' => 'IL',
+        'after' => 'IN'
+    ];
+
+    public $homeValues = [
+        'before' => 'IL',
+        'after' => 'IN'
+    ];
+
+    public $income = null;
+
+    public $dependents = null;
+
+    public $isMarried = false;
+
+    public function __construct($data)
+    {
+        $this->countyIds = [
+            'before' => $data['from-county'],
+            'after' => $data['to-county']
+        ];
+        $this->homeValues = [
+            'before' => $this->cleanNumber($data['home-value-before']),
+            'after' => $this->cleanNumber($data['home-value-after'])
+        ];
+        $this->income = $this->cleanNumber($data['income']);
+        $this->dependents = $data['dependents'];
+        $this->isMarried = (bool)$data['is_married'];
+    }
+
     /**
      * Conducts tax savings calculation and returns various output
      *
-     * @param array $input Keys expected:
-     *     from_county, to_county, income, dependents, home_value_before, home_value_after
      * @return array
      */
-    public function calculate($input)
+    public function calculate()
     {
-        $countyIds = [
-            'before' => $input['from_county'],
-            'after' => $input['to_county']
-        ];
-        $stateIds = [
-            'before' => StatesTable::ILLINOIS,
-            'after' => StatesTable::INDIANA
-        ];
-        $stateAbbrevs = [
-            'before' => 'IL',
-            'after' => 'IN'
-        ];
-        $homeValues = [
-            'before' => $this->cleanNumber($input['home_value_before']),
-            'after' => $this->cleanNumber($input['home_value_after'])
-        ];
-        $income = $this->cleanNumber($input['income']);
-        $dependents = $input['dependents'];
-        $isMarried = (bool)$input['is_married'];
-        $avgAnnualExpenditures = $this->getAvgAnnualExpenditures($income);
+        $avgAnnualExpenditures = $this->getAvgAnnualExpenditures();
 
         // ------ VALIDATE INPUT ------
         // Validate counties by attempting to retrieve their names
         $countyName = [];
         $countiesTable = TableRegistry::get('Counties');
         foreach (['before', 'after'] as $key) {
-            $county = $countiesTable->get($countyIds[$key]);
-            $countyName[$key] = $county->name . ' County, ' . $stateAbbrevs[$key];
+            $county = $countiesTable->get($this->countyIds[$key]);
+            $countyName[$key] = $county->name . ' County, ' . $this->stateAbbrevs[$key];
         }
 
         // ------ GENERATE OUTPUT ------
@@ -54,20 +74,19 @@ class Calculator
         $salesTaxTypes = $this->getSalesTaxTypes();
         foreach (['before', 'after'] as $key) {
             // Adjusted gross income
-            $stateAbbrev = $stateAbbrevs[$key];
-            $agi = $this->getAGI($income, $dependents, $isMarried, $stateAbbrev);
+            $stateAbbrev = $this->stateAbbrevs[$key];
+            $agi = $this->getAGI($stateAbbrev);
 
             // Taxes paid
-            $stateId = $stateIds[$key];
+            $stateId = $this->stateIds[$key];
             $taxes['state'][$key] = $this->getStateIncomeTax($agi, $stateId);
-            $countyId = $countyIds[$key];
+            $countyId = $this->countyIds[$key];
             $taxes['county'][$key] = $this->getCountyIncomeTax($agi, $countyId);
-            $homeValue = $homeValues[$key];
+            $homeValue = $this->homeValues[$key];
             $taxes['property'][$key] = $this->getPropertyTax($homeValue, $countyId, $stateAbbrev);
             foreach ($salesTaxTypes as $salesTaxType) {
                 $taxes['sales'][$salesTaxType][$key] = $this->getSalesTax(
                     $salesTaxType,
-                    $income,
                     $stateAbbrev,
                     $countyId
                 );
@@ -100,19 +119,19 @@ class Calculator
             'max' => $before['max'] - $after['min']
         ];
 
-        return compact(
-            'avgAnnualExpenditures',
-            'countyIds',
-            'countyName',
-            'dependents',
-            'homeValues',
-            'income',
-            'salesTaxTypes',
-            'savings',
-            'stateAbbrevs',
-            'stateIds',
-            'taxes'
-        );
+        return [
+            'avgAnnualExpenditures' => $avgAnnualExpenditures,
+            'countyIds' => $this->countyIds,
+            'countyName' => $countyName,
+            'dependents' => $this->dependents,
+            'homeValues' => $this->homeValues,
+            'income' => $this->income,
+            'salesTaxTypes' => $salesTaxTypes,
+            'savings' => $savings,
+            'stateAbbrevs' => $this->stateAbbrevs,
+            'stateIds' => $this->stateIds,
+            'taxes' => $taxes
+        ];
     }
 
     /**
@@ -136,12 +155,11 @@ class Calculator
     /**
      * Returns the average annual expenditures in dollars for the provided income level
      *
-     * @param int $income Income in dollars
      * @return float
      */
-    public function getAvgAnnualExpenditures($income)
+    public function getAvgAnnualExpenditures()
     {
-        return $income * $this->getAvgAnnualExpendituresPercent($income) / 100;
+        return $this->income * $this->getAvgAnnualExpendituresPercent() / 100;
     }
 
     /**
@@ -149,10 +167,9 @@ class Calculator
      *
      * Data current as of 2016
      *
-     * @param int $income Income in dollars
      * @return float
      */
-    public function getAvgAnnualExpendituresPercent($income)
+    public function getAvgAnnualExpendituresPercent()
     {
         // Less than or equal to $key dollars => $value percent
         $values = [
@@ -167,7 +184,7 @@ class Calculator
         ];
 
         foreach ($values as $incomeLimit => $percent) {
-            if ($income <= $incomeLimit) {
+            if ($this->income <= $incomeLimit) {
                 return $percent;
             }
         }
@@ -196,16 +213,13 @@ class Calculator
     /**
      * Returns adjusted gross income
      *
-     * @param int $income Income in dollars
-     * @param int $dependents Number of dependents
-     * @param bool $isMarried Is taxpayer married?
      * @param string $stateAbbrev State abbreviation
      * @return int
      */
-    public function getAGI($income, $dependents, $isMarried, $stateAbbrev)
+    public function getAGI($stateAbbrev)
     {
-        $exemptions = $this->getExemptionsTotal($dependents, $isMarried, $stateAbbrev);
-        $adjustedIncome = $income - $exemptions;
+        $exemptions = $this->getExemptionsTotal($stateAbbrev);
+        $adjustedIncome = $this->income - $exemptions;
 
         return max(0, $adjustedIncome);
     }
@@ -215,20 +229,18 @@ class Calculator
      *
      * These formulas are current as of 2017
      *
-     * @param int $dependents Number of dependents
-     * @param bool $isMarried Is the taxpayer married?
      * @param string $stateAbbrev State abbreviation
      * @return int
      * @throws NotFoundException
      */
-    public function getExemptionsTotal($dependents, $isMarried, $stateAbbrev)
+    public function getExemptionsTotal($stateAbbrev)
     {
         if ($stateAbbrev === 'IN') {
-            return (1500 * $dependents) + ($isMarried ? 1000 : 0) + 1000;
+            return (1500 * $this->dependents) + ($this->isMarried ? 1000 : 0) + 1000;
         }
 
         if ($stateAbbrev === 'IL') {
-            return ($dependents + ($isMarried ? 1 : 0) + 1) * 2175;
+            return ($this->dependents + ($this->isMarried ? 1 : 0) + 1) * 2175;
         }
 
         throw new NotFoundException('State "' . $stateAbbrev . '" not recognized');
@@ -377,18 +389,17 @@ class Calculator
      * Returns the estimated annual sales tax in dollars
      *
      * @param string $type Expenditure type
-     * @param int $income Income in dollars
      * @param string $stateAbbrev State abbreviation
      * @param int $countyId County ID
      * @return array
      */
-    public function getSalesTax($type, $income, $stateAbbrev, $countyId)
+    public function getSalesTax($type, $stateAbbrev, $countyId)
     {
         /** @var TaxRatesTable $taxRatesTable */
         $taxRatesTable = TableRegistry::get('TaxRates');
         $taxRateRange = $taxRatesTable->getSalesTaxRate($type, $stateAbbrev, $countyId);
-        $expenditureRate = $this->getExpenditureRate($type, $income) / 100;
-        $aae = $income * $this->getAvgAnnualExpendituresPercent($income) / 100;
+        $expenditureRate = $this->getExpenditureRate($type) / 100;
+        $aae = $this->income * $this->getAvgAnnualExpendituresPercent() / 100;
         $spent = $aae * $expenditureRate;
 
         return [
@@ -403,11 +414,10 @@ class Calculator
      * Data current as of 2016
      *
      * @param string $type Type of expenditure
-     * @param int $income Income in dollars
      * @return float
      * @throws NotFoundException
      */
-    public function getExpenditureRate($type, $income)
+    public function getExpenditureRate($type)
     {
         // Rates for various income levels < $200,000
         $incomeThresholds = [15000, 30000, 40000, 50000, 70000, 100000, 150000, 200000];
@@ -421,7 +431,7 @@ class Calculator
         ];
 
         foreach ($incomeThresholds as $incomeKey => $incomeThreshold) {
-            if ($income < $incomeThreshold) {
+            if ($this->income < $incomeThreshold) {
                 if (isset($rates[$type])) {
                     return $rates[$type][$incomeKey];
                 }
@@ -457,40 +467,34 @@ class Calculator
     {
         /**
          * @var $avgAnnualExpenditures
-         * @var $countyIds
          * @var $countyName
-         * @var $dependents
-         * @var $homeValues
-         * @var $income
          * @var $salesTaxTypes
          * @var $savings
-         * @var $stateAbbrevs
-         * @var $stateIds
          * @var $taxes
          */
         extract($input);
 
         $formulas = [];
 
-        $formulas['aae'] = $this->getAvgAnnualExpendituresPercent($income) . '% of income';
+        $formulas['aae'] = $this->getAvgAnnualExpendituresPercent() . '% of income';
 
         /** @var TaxRatesTable $taxRatesTable */
         $taxRatesTable = TableRegistry::get('TaxRates');
         foreach (['before', 'after'] as $key) {
-            $state = $stateAbbrevs[$key];
+            $state = $this->stateAbbrevs[$key];
             $formulas['exemptions'][$key] = $this->getExemptionsFormula($state);
 
             $formulas['agi'][$key] = 'income &#8722; exemptions';
 
-            $stateTaxRate = $taxRatesTable->getStateIncomeTaxRate($stateIds[$key]);
+            $stateTaxRate = $taxRatesTable->getStateIncomeTaxRate($this->stateIds[$key]);
             $formulas['taxes']['state'][$key] = round($stateTaxRate, 2) . '% of AGI';
 
-            $countyId = $countyIds[$key];
+            $countyId = $this->countyIds[$key];
             $countyTaxRate = $taxRatesTable->getCountyIncomeTaxRate($countyId);
             $formulas['taxes']['county'][$key] = round($countyTaxRate, 2) . '% of AGI';
 
             // Property taxes
-            $homeValue = $homeValues[$key];
+            $homeValue = $this->homeValues[$key];
             $formulas['rhv'][$key] = $this->getRHVFormula($state);
             $formulas['shd'][$key] = $this->getSHDFormula($homeValue, $state);
             $formulas['net_ahv'][$key] = $this->getAHVFormula($countyId, $state);
@@ -506,7 +510,7 @@ class Calculator
             }
 
             foreach ($salesTaxTypes as $salesTaxType) {
-                $eRate = $this->getExpenditureRate($salesTaxType, $income);
+                $eRate = $this->getExpenditureRate($salesTaxType);
                 $taxRates = $taxRatesTable->getSalesTaxRate($salesTaxType, $state, $countyId);
                 $taxRateString = $taxRates['min'] == $taxRates['max']
                     ? $taxRates['min'] . '%'

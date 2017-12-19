@@ -46,17 +46,9 @@ class PagesController extends AppController
         $calculatorForm = new CalculatorForm();
 
         if ($this->request->is('post')) {
-            $calculator = new Calculator();
+            $calculator = new Calculator($this->request->getData());
             if ($calculatorForm->validate($this->request->getData())) {
-                $output = $calculator->calculate([
-                    'from_county' => $this->request->getData('from-county'),
-                    'to_county' => $this->request->getData('to-county'),
-                    'home_value_before' => $this->request->getData('home-value-before'),
-                    'home_value_after' => $this->request->getData('home-value-after'),
-                    'income' => $this->request->getData('income'),
-                    'dependents' => $this->request->getData('dependents'),
-                    'is_married' => $this->request->getData('is_married')
-                ]);
+                $output = $calculator->calculate();
                 $this->set($output);
                 $formulas = $calculator->getFormulas($output);
                 $this->set('formulas', $formulas);
