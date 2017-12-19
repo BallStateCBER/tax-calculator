@@ -43,6 +43,11 @@ class Calculator
 
     public $taxes = [];
 
+    /**
+     * Calculator constructor
+     *
+     * @param $data
+     */
     public function __construct($data)
     {
         $this->countyIds = [
