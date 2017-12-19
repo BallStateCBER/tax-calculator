@@ -10,12 +10,12 @@
     <div class="col-sm-4 col-md-offset-4">
         <?= $this->Form->create($calculatorForm, ['id' => 'calculator-input']); ?>
 
-        <?= $this->Form->input('from-county', [
+        <?= $this->Form->control('from-county', [
             'label' => 'What Illinois county are you moving from?',
             'options' => $counties['IL']
         ]); ?>
 
-        <?= $this->Form->input('to-county', [
+        <?= $this->Form->control('to-county', [
             'label' => 'What Indiana county are you moving to?',
             'options' => $counties['IN']
         ]); ?>
@@ -23,14 +23,14 @@
         <?php $this->Form->setTemplates(require(ROOT . DS . 'config' . DS . 'bootstrap_currency_form.php')); ?>
 
         <label for="calc-input-home-value-before">What is the value of your home in Illinois?</label>
-        <?= $this->Form->input('home-value-before', [
+        <?= $this->Form->control('home-value-before', [
             'label' => 'What is the value of your home in Illinois?',
             'value' => isset($homeValue) ? $homeValue : null,
             'id' => 'calc-input-home-value-before'
         ]); ?>
 
         <label for="calc-input-home-value-after">What is the value of your home in Indiana?</label>
-        <?= $this->Form->input('home-value-after', [
+        <?= $this->Form->control('home-value-after', [
             'label' => 'What is the value of your home in Indiana?',
             'value' => isset($homeValue) ? $homeValue : null,
             'id' => 'calc-input-home-value-after',
@@ -40,7 +40,7 @@
         ]); ?>
 
         <label for="calc-input-income">What is your household's annual income?</label>
-        <?= $this->Form->input('income', [
+        <?= $this->Form->control('income', [
             'label' => 'What is your household\'s annual income?',
             'value' => isset($income) ? $income : null,
             'id' => 'calc-input-income',
@@ -51,7 +51,7 @@
 
         <?php $this->Form->setTemplates(require(ROOT . DS . 'config' . DS . 'bootstrap_form.php')); ?>
 
-        <?= $this->Form->input('dependents', [
+        <?= $this->Form->control('dependents', [
             'label' => 'How many dependents can you claim on your tax return?',
             'options' => [
                 'None',
@@ -63,7 +63,7 @@
             'value' => isset($dependents) ? $dependents : null
         ]); ?>
 
-        <?= $this->Form->input('is_married', [
+        <?= $this->Form->control('is_married', [
             'label' => 'Are you married?',
             'type' => 'radio',
             'options' => [
