@@ -87,4 +87,23 @@ class CountiesTable extends Table
 
         return $validator;
     }
+
+    /**
+     * Returns an array of IN and IL counties to use as <select> options
+     *
+     * @return array
+     */
+    public function getCountyOptions()
+    {
+        $counties = [];
+        foreach (['IN', 'IL'] as $state) {
+            $counties[$state] = $this
+                ->find('list')
+                ->where(['state' => $state])
+                ->orderAsc('name')
+                ->toArray();
+        }
+
+        return $counties;
+    }
 }

@@ -34,16 +34,6 @@ class PagesController extends AppController
      */
     public function home()
     {
-        $this->loadModel('Counties');
-        $counties = [];
-        foreach (['IN', 'IL'] as $state) {
-            $counties[$state] = $this->Counties
-                ->find('list')
-                ->where(['state' => $state])
-                ->orderAsc('name')
-                ->toArray();
-        }
-
         $calculatorForm = new CalculatorForm();
         if ($this->request->is('post')) {
             $calculator = new Calculator($this->request->getData());
@@ -63,9 +53,10 @@ class PagesController extends AppController
         foreach ($defaultData as $var => $val) {
             $this->request = $this->request->withData($var, $val);
         }
+        $this->loadModel('Counties');
         $this->set([
             'calculatorForm' => $calculatorForm,
-            'counties' => $counties,
+            'counties' => $this->Counties->getCountyOptions(),
             'title_for_layout' => ''
         ]);
 
