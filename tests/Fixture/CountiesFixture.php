@@ -40,10 +40,17 @@ class CountiesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'state' => '',
-            'name' => 'Lorem ipsum dolor sit amet',
-            'simplified' => 'Lorem ipsum dolor sit amet',
-            'fips' => 1
+            'state' => 'IN',
+            'name' => 'Adams',
+            'simplified' => 'adams',
+            'fips' => 18001
         ],
+        [
+            'id' => 93,
+            'state' => 'IL',
+            'name' => 'Adams',
+            'simplified' => null,
+            'fips' => 17001
+        ]
     ];
 }

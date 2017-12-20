@@ -39,11 +39,18 @@ class StatesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'abbreviation' => 'Lo',
-            'fips' => 1,
-            'supported' => 1
+            'id' => 13,
+            'name' => 'Illinois',
+            'abbreviation' => 'IL',
+            'fips' => 17000,
+            'supported' => true
         ],
+        [
+            'id' => 14,
+            'name' => 'Indiana',
+            'abbreviation' => 'IN',
+            'fips' => 18000,
+            'supported' => true
+        ]
     ];
 }

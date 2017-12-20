@@ -38,8 +38,28 @@ class DataCategoriesFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'name' => 'Lorem ipsum dolor sit amet',
-            'notes' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.'
+            'name' => 'County income tax',
+            'notes' => ''
+        ],
+        [
+            'id' => 2,
+            'name' => 'State income tax',
+            'notes' => ''
+        ],
+        [
+            'id' => 3,
+            'name' => 'Property tax',
+            'notes' => ''
+        ],
+        [
+            'id' => 4,
+            'name' => 'County lowest sales tax',
+            'notes' => ''
+        ],
+        [
+            'id' => 5,
+            'name' => 'County highest sales tax',
+            'notes' => ''
         ],
     ];
 }
