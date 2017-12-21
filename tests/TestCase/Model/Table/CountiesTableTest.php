@@ -70,4 +70,18 @@ class CountiesTableTest extends TestCase
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
+
+    /**
+     * Tests CountiesTable::getCountyOptions()
+     *
+     * @return void
+     */
+    public function testGetCountyOptions()
+    {
+        /** @var CountiesTable $countiesTable */
+        $countiesTable = TableRegistry::get('Counties');
+        $result = $countiesTable->getCountyOptions();
+        $this->assertNotEmpty($result['IN']);
+        $this->assertNotEmpty($result['IL']);
+    }
 }
