@@ -423,7 +423,18 @@ class CalculatorTest extends TestCase
      */
     public function testGetSalesTax()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+        $salesTaxTypes = $calculator->getSalesTaxTypes();
+
+        foreach ($salesTaxTypes as $type) {
+            foreach (['before', 'after'] as $key) {
+                $stateAbbrev = $calculator->stateAbbrevs[$key];
+                $countyId = $calculator->countyIds[$key];
+                $result = $calculator->getSalesTax($type, $stateAbbrev, $countyId);
+                $this->assertArrayHasKey('min', $result);
+                $this->assertArrayHasKey('max', $result);
+            }
+        }
     }
 
     /**
