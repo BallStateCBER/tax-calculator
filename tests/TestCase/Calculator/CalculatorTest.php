@@ -444,7 +444,20 @@ class CalculatorTest extends TestCase
      */
     public function testGetExpenditureRate()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+        $salesTaxTypes = $calculator->getSalesTaxTypes();
+        $incomes = [14999, 29999, 39999, 49999, 69999, 99999, 149999, 199999, 200000];
+
+        foreach ($salesTaxTypes as $type) {
+            foreach ($incomes as $income) {
+                $calculator->income = $income;
+                $result = $calculator->getExpenditureRate($type);
+                $this->assertGreaterThan(0, $result);
+            }
+        }
+
+        $this->expectException(NotFoundException::class);
+        $calculator->getExpenditureRate('invalid sales tax type');
     }
 
     /**
