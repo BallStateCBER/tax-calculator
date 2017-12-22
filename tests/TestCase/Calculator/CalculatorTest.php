@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Calculator;
 
 use App\Calculator\Calculator;
+use App\Model\Table\CountiesTable;
 use App\Model\Table\TaxRatesTable;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -333,7 +334,26 @@ class CalculatorTest extends TestCase
      */
     public function testGetNetAhv()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        foreach (['before', 'after'] as $key) {
+            $homeValue = $calculator->homeValues[$key];
+            $countyId = $calculator->countyIds[$key];
+            $stateAbbrev = $calculator->stateAbbrevs[$key];
+            if ($key == 'before') { // Illinois
+                $expected = $homeValue * ($countyId == CountiesTable::COOK_COUNTY ? 0.1 : 0.333);
+            } else { // Indiana
+                $rv = $calculator->getRHV($homeValue, $stateAbbrev);
+                $shd = $calculator->getSHD($homeValue, $stateAbbrev);
+                $expected = $rv - $shd;
+            }
+            $actual = $calculator->getNetAHV($homeValue, $countyId, $stateAbbrev);
+            $this->assertEquals($expected, $actual);
+        }
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(NotFoundException::class);
+        $calculator->getNetAHV($homeValue, $countyId, $stateAbbrev);
     }
 
     /**
