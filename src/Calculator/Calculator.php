@@ -208,7 +208,7 @@ class Calculator
      *
      * @return array
      */
-    public function getSalesTaxTypes()
+    public static function getSalesTaxTypes()
     {
         return [
             'food at home',
