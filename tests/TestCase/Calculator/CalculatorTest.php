@@ -7,6 +7,26 @@ use Cake\TestSuite\TestCase;
 class CalculatorTest extends TestCase
 {
     /**
+     * Fixtures
+     *
+     * @var array
+     */
+    public $fixtures = [
+        'app.counties',
+        'app.tax_rates'
+    ];
+
+    private $data = [
+        'from-county' => 93,
+        'to-county' => 1,
+        'home-value-before' => 250000,
+        'home-value-after' => 250000,
+        'income' => 55000,
+        'dependents' => 0,
+        'is_married' => 0
+    ];
+
+    /**
      * Tests Calculator::cleanNumber()
      *
      * @return void
@@ -35,7 +55,15 @@ class CalculatorTest extends TestCase
      */
     public function testCalculateSavings()
     {
-        $this->markTestIncomplete();
+        $calculator = new Calculator($this->data);
+        $before = $calculator->taxes['total']['before'];
+        $after = $calculator->taxes['total']['after'];
+        $expected = [
+            'min' => $before['min'] - $after['max'],
+            'max' => $before['max'] - $after['min']
+        ];
+        $result = $calculator->calculateSavings();
+        $this->assertEquals($result, $expected);
     }
 
     /**
