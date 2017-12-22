@@ -73,8 +73,8 @@ class CalculatorTest extends TestCase
                     'after' => ['min' => 0.0, 'max' => 0.0]
                 ],
                 'food away from home' => [
-                    'before' => ['min' => 173.03, 'max' => 212.96,],
-                    'after' => ['min' => 186.34000000000003, 'max' => 186.34000000000003,],
+                    'before' => ['min' => 173.03, 'max' => 212.96],
+                    'after' => ['min' => 186.34000000000003, 'max' => 186.34000000000003],
                 ],
                 'housekeeping supplies' => [
                     'before' => ['min' => 37.752, 'max' => 46.464000000000006],
@@ -88,7 +88,7 @@ class CalculatorTest extends TestCase
                     'after' => ['min' => 105.02800000000002, 'max' => 105.02800000000002],
                 ],
                 'personal care products' => [
-                    'before' => ['min' => 37.752, 'max' => 46.464000000000006,],
+                    'before' => ['min' => 37.752, 'max' => 46.464000000000006],
                     'after' => ['min' => 40.656000000000006, 'max' => 40.656000000000006]
                 ],
                 'total' => [
