@@ -555,7 +555,19 @@ class CalculatorTest extends TestCase
      */
     public function testGetRhvFormula()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        // Illinois
+        $result = $calculator->getRHVFormula('IL');
+        $this->assertEquals('', $result);
+
+        // Indiana
+        $result = $calculator->getRHVFormula('IN');
+        $this->assertNotNull($result);
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(InternalErrorException::class);
+        $calculator->getRHVFormula($stateAbbrev);
     }
 
     /**
