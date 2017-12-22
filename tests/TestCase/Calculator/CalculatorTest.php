@@ -27,6 +27,15 @@ class CalculatorTest extends TestCase
         'is_married' => 0
     ];
 
+    /** @var Calculator */
+    private $calculator;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->calculator = new Calculator($this->data);
+    }
+
     /**
      * Tests Calculator::cleanNumber()
      *
@@ -46,7 +55,7 @@ class CalculatorTest extends TestCase
      */
     public function testCalculateTaxes()
     {
-        $calculator = new Calculator($this->data);
+        $calculator = $this->calculator;
         $result = $calculator->calculateTaxes();
         $expected = [
             'state' => ['before' => 1980.9375, 'after' => 1744.2],
@@ -107,7 +116,7 @@ class CalculatorTest extends TestCase
      */
     public function testCalculateSavings()
     {
-        $calculator = new Calculator($this->data);
+        $calculator = $this->calculator;
         $before = $calculator->taxes['total']['before'];
         $after = $calculator->taxes['total']['after'];
         $expected = [
