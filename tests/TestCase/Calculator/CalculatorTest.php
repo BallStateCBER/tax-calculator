@@ -134,7 +134,11 @@ class CalculatorTest extends TestCase
      */
     public function testGetAvgAnnualExp()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+        $calculator->income = 100000;
+        $expected = $calculator->income * 78 / 100;
+        $actual = $calculator->getAvgAnnualExpenditures();
+        $this->assertEquals($expected, $actual);
     }
 
     /**
