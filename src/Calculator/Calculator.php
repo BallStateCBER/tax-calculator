@@ -179,6 +179,11 @@ class Calculator
      */
     public function getAvgAnnualExpendituresPercent()
     {
+        // If income >= $200,000
+        if ($this->income >= 200000) {
+            return 46;
+        }
+
         // Less than or equal to $key dollars => $value percent
         $values = [
             15000 => 282,
@@ -196,9 +201,6 @@ class Calculator
                 return $percent;
             }
         }
-
-        // If income >= $200,000
-        return 46;
     }
 
     /**
