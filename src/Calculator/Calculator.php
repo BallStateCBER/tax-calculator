@@ -148,7 +148,7 @@ class Calculator
      * @param string $number Numeric string
      * @return int
      */
-    public function cleanNumber($number)
+    public static function cleanNumber($number)
     {
         // Remove cents (if decimal point found)
         $decimalPoint = strpos($number, '.');
