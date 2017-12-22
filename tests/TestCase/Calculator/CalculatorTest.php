@@ -467,7 +467,41 @@ class CalculatorTest extends TestCase
      */
     public function testGetFormulas()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+        $beforeAfter = ['before' => null, 'after' => null];
+        $keys = [
+            'aae' => null,
+            'exemptions' => $beforeAfter,
+            'agi' => $beforeAfter,
+            'taxes' => [
+                'state' => $beforeAfter,
+                'county' => $beforeAfter,
+                'property' => $beforeAfter,
+                'sales' => [
+                    'food at home' => $beforeAfter,
+                    'food away from home' => $beforeAfter,
+                    'housekeeping supplies' => $beforeAfter,
+                    'apparel and services' => $beforeAfter,
+                    'household furnishings and equipment' => $beforeAfter,
+                    'personal care products' => $beforeAfter
+                ]
+            ],
+            'rhv' => $beforeAfter,
+            'shd' => $beforeAfter,
+            'net_ahv' => $beforeAfter,
+            'expenditures' => [
+                'food at home' => null,
+                'food away from home' => null,
+                'housekeeping supplies' => null,
+                'apparel and services' => null,
+                'household furnishings and equipment' => null,
+                'personal care products' => null
+            ]
+        ];
+        $expected = Hash::flatten($keys);
+        $result = $calculator->getFormulas();
+        $actual = Hash::flatten($result);
+        $this->assertEquals(array_keys($expected), array_keys($actual));
     }
 
     /**
