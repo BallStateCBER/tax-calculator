@@ -363,7 +363,23 @@ class CalculatorTest extends TestCase
      */
     public function testGetRhv()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        // Illinois
+        $homeValue = $calculator->homeValues['after'];
+        $expected = $homeValue;
+        $actual = $calculator->getRHV($homeValue, 'IL');
+        $this->assertEquals($expected, $actual);
+
+        // Indiana
+        $homeValue = $calculator->homeValues['after'];
+        $expected = $homeValue - min($homeValue * .6, 45000);
+        $actual = $calculator->getRHV($homeValue, 'IN');
+        $this->assertEquals($expected, $actual);
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(NotFoundException::class);
+        $calculator->getRHV($homeValue, $stateAbbrev);
     }
 
     /**
