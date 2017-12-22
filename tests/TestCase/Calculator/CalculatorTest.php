@@ -281,7 +281,20 @@ class CalculatorTest extends TestCase
      */
     public function testGetCountyIncomeTax()
     {
-        $this->markTestIncomplete();
+        /** @var TaxRatesTable $taxRatesTable */
+        $taxRatesTable = TableRegistry::get('TaxRates');
+        $calculator = $this->calculator;
+        $states = [
+            13 => 'IL',
+            14 => 'IN'
+        ];
+        foreach ($states as $stateId => $stateAbbrev) {
+            $agi = $calculator->getAGI($stateAbbrev);
+            $rate = $taxRatesTable->getCountyIncomeTaxRate($stateId);
+            $expected = $agi * ($rate / 100);
+            $actual = $calculator->getCountyIncomeTax($agi, $stateId);
+            $this->assertEquals($expected, $actual);
+        }
     }
 
     /**
