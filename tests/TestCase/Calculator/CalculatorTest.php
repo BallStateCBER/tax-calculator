@@ -144,7 +144,38 @@ class CalculatorTest extends TestCase
      */
     public function testGetAvgAnnualExpPercent()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        $calculator->income = 200000;
+        $actualPercent = $calculator->getAvgAnnualExpendituresPercent();
+        $this->assertEquals(46, $actualPercent);
+
+        $calculator->income = 200001;
+        $actualPercent = $calculator->getAvgAnnualExpendituresPercent();
+        $this->assertEquals(46, $actualPercent);
+
+        $values = [
+            15000 => 282,
+            30000 => 144,
+            40000 => 116,
+            50000 => 99,
+            70000 => 88,
+            100000 => 78,
+            150000 => 70,
+            200000 => 64
+        ];
+        foreach ($values as $incomeLimit => $expectedPercent) {
+            // Test that the expected percent is returned for incomes equal to or less than each limit
+            foreach ([0, 1] as $subtrahend) {
+                $calculator->income = $incomeLimit - $subtrahend;
+                if ($calculator->income == 200000) {
+                    continue;
+                }
+
+                $actualPercent = $calculator->getAvgAnnualExpendituresPercent();
+                $this->assertEquals($expectedPercent, $actualPercent);
+            }
+        }
     }
 
     /**
