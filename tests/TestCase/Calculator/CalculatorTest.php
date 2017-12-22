@@ -3,6 +3,7 @@ namespace App\Test\TestCase\Calculator;
 
 use App\Calculator\Calculator;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Hash;
 
 class CalculatorTest extends TestCase
 {
@@ -45,7 +46,58 @@ class CalculatorTest extends TestCase
      */
     public function testCalculateTaxes()
     {
-        $this->markTestIncomplete();
+        $calculator = new Calculator($this->data);
+        $result = $calculator->calculateTaxes();
+        $expected = [
+            'state' => ['before' => 1980.9375, 'after' => 1744.2],
+            'county' => ['before' => 0, 'after' => 876.96],
+            'property' => ['before' => 1398.6, 'after' => 1332.5],
+            'sales' => [
+                'food at home' => [
+                    'before' => ['min' => 36.300000000000004, 'max' => 36.300000000000004],
+                    'after' => ['min' => 0.0, 'max' => 0.0]
+                ],
+                'food away from home' => [
+                    'before' => ['min' => 173.03, 'max' => 212.96,],
+                    'after' => ['min' => 186.34000000000003, 'max' => 186.34000000000003,],
+                ],
+                'housekeeping supplies' => [
+                    'before' => ['min' => 37.752, 'max' => 46.464000000000006],
+                    'after' => ['min' => 40.656000000000006, 'max' => 40.656000000000006]
+                ], 'apparel and services' => [
+                    'before' => ['min' => 97.52600000000001, 'max' => 120.03200000000001],
+                    'after' => ['min' => 105.02800000000002, 'max' => 105.02800000000002]
+                ],
+                'household furnishings and equipment' => [
+                    'before' => ['min' => 97.52600000000001, 'max' => 120.03200000000001],
+                    'after' => ['min' => 105.02800000000002, 'max' => 105.02800000000002],
+                ],
+                'personal care products' => [
+                    'before' => ['min' => 37.752, 'max' => 46.464000000000006,],
+                    'after' => ['min' => 40.656000000000006, 'max' => 40.656000000000006]
+                ],
+                'total' => [
+                    'before' => ['min' => 479.8860000000001, 'max' => 582.2520000000002],
+                    'after' => ['min' => 477.7080000000001, 'max' => 477.7080000000001]
+                ]
+            ],
+            'total' => [
+                'before' => ['min' => 3859.4235, 'max' => 3961.7895],
+                'after' => ['min' => 4431.368, 'max' => 4431.368]
+            ]
+        ];
+
+        // Flatten for easier traversal
+        $expected = Hash::flatten($expected);
+        $result = Hash::flatten($result);
+
+        foreach ($expected as $key => $value) {
+            // Account for floating-point math weirdness
+            $expectedVal = round($value, 6);
+            $actualVal = round($result[$key], 6);
+
+            $this->assertEquals($expectedVal, $actualVal, "Tax key: $key");
+        }
     }
 
     /**
