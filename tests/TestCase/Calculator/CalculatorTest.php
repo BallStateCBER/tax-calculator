@@ -304,7 +304,26 @@ class CalculatorTest extends TestCase
      */
     public function testGetPropertyTax()
     {
-        $this->markTestIncomplete();
+        /** @var TaxRatesTable $taxRatesTable */
+        $taxRatesTable = TableRegistry::get('TaxRates');
+        $calculator = $this->calculator;
+
+        foreach (['before', 'after'] as $key) {
+            $homeValue = $calculator->homeValues[$key];
+            $countyId = $calculator->countyIds[$key];
+            $stateAbbrev = $calculator->stateAbbrevs[$key];
+            $rate = $taxRatesTable->getPropertyTaxRate($countyId);
+            $netAhv = $calculator->getNetAHV($homeValue, $countyId, $stateAbbrev);
+            $expected = $key == 'before'
+                ? $netAhv * ($rate / 100) // Illinois
+                : $netAhv * min(($rate / 100), 0.01); // Indiana
+            $actual = $calculator->getPropertyTax($homeValue, $countyId, $stateAbbrev);
+            $this->assertEquals($expected, $actual);
+        }
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(NotFoundException::class);
+        $calculator->getPropertyTax($homeValue, $countyId, $stateAbbrev);
     }
 
     /**
