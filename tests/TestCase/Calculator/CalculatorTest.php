@@ -2,7 +2,9 @@
 namespace App\Test\TestCase\Calculator;
 
 use App\Calculator\Calculator;
+use App\Model\Table\TaxRatesTable;
 use Cake\Network\Exception\NotFoundException;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
@@ -15,6 +17,7 @@ class CalculatorTest extends TestCase
      */
     public $fixtures = [
         'app.counties',
+        'app.states',
         'app.tax_rates'
     ];
 
@@ -255,7 +258,20 @@ class CalculatorTest extends TestCase
      */
     public function testGetStateIncomeTax()
     {
-        $this->markTestIncomplete();
+        /** @var TaxRatesTable $taxRatesTable */
+        $taxRatesTable = TableRegistry::get('TaxRates');
+        $calculator = $this->calculator;
+        $states = [
+            13 => 'IL',
+            14 => 'IN'
+        ];
+        foreach ($states as $stateId => $stateAbbrev) {
+            $agi = $calculator->getAGI($stateAbbrev);
+            $rate = $taxRatesTable->getStateIncomeTaxRate($stateId);
+            $expected = $agi * ($rate / 100);
+            $actual = $calculator->getStateIncomeTax($agi, $stateId);
+            $this->assertEquals($expected, $actual);
+        }
     }
 
     /**
