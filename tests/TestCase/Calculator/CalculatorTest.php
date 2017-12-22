@@ -189,7 +189,16 @@ class CalculatorTest extends TestCase
      */
     public function testGetSalesTaxTypes()
     {
-        $this->markTestIncomplete();
+        $expected = [
+            'food at home',
+            'food away from home',
+            'housekeeping supplies',
+            'apparel and services',
+            'household furnishings and equipment',
+            'personal care products'
+        ];
+        $actual = Calculator::getSalesTaxTypes();
+        $this->assertEquals($expected, $actual);
     }
 
     /**
