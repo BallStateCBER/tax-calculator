@@ -4,6 +4,7 @@ namespace App\Test\TestCase\Calculator;
 use App\Calculator\Calculator;
 use App\Model\Table\CountiesTable;
 use App\Model\Table\TaxRatesTable;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -511,7 +512,16 @@ class CalculatorTest extends TestCase
      */
     public function testGetExemptionsFormula()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        foreach (['IN', 'IL'] as $stateAbbrev) {
+            $result = $calculator->getExemptionsFormula($stateAbbrev);
+            $this->assertNotNull($result);
+        }
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(InternalErrorException::class);
+        $calculator->getExemptionsFormula($stateAbbrev);
     }
 
     /**
