@@ -577,6 +577,17 @@ class CalculatorTest extends TestCase
      */
     public function testGetAhvFormula()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        foreach (['before', 'after'] as $key) {
+            $stateAbbrev = $calculator->stateAbbrevs[$key];
+            $countyId = $calculator->countyIds[$key];
+            $result = $calculator->getAHVFormula($countyId, $stateAbbrev);
+            $this->assertNotNull($result);
+        }
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(InternalErrorException::class);
+        $calculator->getAHVFormula($countyId, $stateAbbrev);
     }
 }
