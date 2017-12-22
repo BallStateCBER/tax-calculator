@@ -531,7 +531,21 @@ class CalculatorTest extends TestCase
      */
     public function testGetShdFormula()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        // Illinois
+        $homeValue = $calculator->homeValues['before'];
+        $result = $calculator->getSHDFormula($homeValue, 'IL');
+        $this->assertEquals('', $result);
+
+        // Indiana
+        $homeValue = $calculator->homeValues['after'];
+        $result = $calculator->getSHDFormula($homeValue, 'IN');
+        $this->assertNotNull($result);
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(InternalErrorException::class);
+        $calculator->getSHDFormula($homeValue, $stateAbbrev);
     }
 
     /**
