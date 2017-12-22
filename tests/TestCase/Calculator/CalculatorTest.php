@@ -389,7 +389,31 @@ class CalculatorTest extends TestCase
      */
     public function testGetShd()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        // Illinois
+        $homeValue = $calculator->homeValues['after'];
+        $expected = 0;
+        $actual = $calculator->getSHD($homeValue, 'IL');
+        $this->assertEquals($expected, $actual);
+
+        // Indiana, RHV <= $600k
+        $homeValue = 600000;
+        $rv = $calculator->getRHV($homeValue, 'IN');
+        $expected = $rv * .35;
+        $actual = $calculator->getSHD($homeValue, 'IN');
+        $this->assertEquals($expected, $actual);
+
+        // Indiana, RHV > $600k
+        $homeValue = 1000000;
+        $rv = $calculator->getRHV($homeValue, 'IN');
+        $expected = (600000 * .35) + (($rv - 600000) * .25);
+        $actual = $calculator->getSHD($homeValue, 'IN');
+        $this->assertEquals($expected, $actual);
+
+        $stateAbbrev = 'invalid state';
+        $this->expectException(NotFoundException::class);
+        $calculator->getSHD($homeValue, $stateAbbrev);
     }
 
     /**
