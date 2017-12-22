@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Calculator;
 
 use App\Calculator\Calculator;
+use Cake\Network\Exception\NotFoundException;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 
@@ -218,7 +219,25 @@ class CalculatorTest extends TestCase
      */
     public function testExemptionsTotal()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        foreach ([0, 1] as $dependents) {
+            $calculator->dependents = $dependents;
+            foreach ([true, false] as $married) {
+                $calculator->isMarried = $married;
+
+                $expected = (1500 * $calculator->dependents) + ($calculator->isMarried ? 1000 : 0) + 1000;
+                $actual = $calculator->getExemptionsTotal('IN');
+                $this->assertEquals($expected, $actual);
+
+                $expected = ($calculator->dependents + ($calculator->isMarried ? 1 : 0) + 1) * 2175;
+                $actual = $calculator->getExemptionsTotal('IL');
+                $this->assertEquals($expected, $actual);
+            }
+        }
+
+        $this->expectException(NotFoundException::class);
+        $calculator->getExemptionsTotal('invalid state');
     }
 
     /**
