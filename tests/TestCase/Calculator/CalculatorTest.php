@@ -209,7 +209,15 @@ class CalculatorTest extends TestCase
      */
     public function testGetAgi()
     {
-        $this->markTestIncomplete();
+        $calculator = $this->calculator;
+
+        foreach (['IN', 'IL'] as $state) {
+            $exemptions = $calculator->getExemptionsTotal($state);
+            $adjustedIncome = $calculator->income - $exemptions;
+            $expected = max(0, $adjustedIncome);
+            $actual = $calculator->getAGI($state);
+            $this->assertEquals($expected, $actual);
+        }
     }
 
     /**
