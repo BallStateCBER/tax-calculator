@@ -8,15 +8,21 @@ php:
   - 7.1
 
 env:
-  - PHPUNIT=1
-  - PHPCS=1
-  - JSHINT=1
+  global:
+    - CC_TEST_REPORTER_ID=4cdc3a3034d60f5c73be6db4e69c72912f8af8141911d3d4e382f69c7a7aeb44
+  matrix:
+    - PHPUNIT=1
+    - PHPCS=1
+    - JSHINT=1
 
 matrix:
   fast_finish: true
 
 before_script:
   - if [[ $PHPCS = 1 ]]; then composer require cakephp/cakephp-codesniffer:^3.0; fi
+  - if [[ $PHPUNIT = 1 ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $PHPUNIT = 1 ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $PHPUNIT = 1 ]]; then ./cc-test-reporter before-build; fi
   - if [[ $PHPUNIT = 1 ]]; then composer install; fi
   - if [[ $PHPUNIT = 1 ]]; then composer require phpunit/phpunit:"^5.7|^6.0"; fi
   - if [[ $PHPUNIT = 1 ]]; then composer run-script post-install-cmd --no-interaction; fi
@@ -25,9 +31,13 @@ before_script:
   - phpenv rehash
 
 script:
-  - if [[ $PHPUNIT = 1 ]]; then vendor/bin/phpunit; fi
+  - if [[ $PHPUNIT = 1 ]]; then vendor/bin/phpunit --coverage-clover clover.xml; fi
   - if [[ $PHPCS = 1 ]]; then vendor/bin/phpcs -p --extensions=php --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./config ./webroot; fi
   - if [[ $JSHINT = 1 ]]; then jshint webroot/js/script.js; fi
+
+after_script:
+  - if [[ $PHPUNIT = 1 ]]; then ./cc-test-reporter format-coverage --input-type clover; fi
+  - if [[ $PHPUNIT = 1 ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
 
 notifications:
   email: false
