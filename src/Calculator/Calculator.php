@@ -317,7 +317,7 @@ class Calculator
             case 'IN':
                 return $netAhv * min(($rate / 100), 0.01);
             case 'IL':
-                return $netAhv * ($rate / 100);
+                return $homeValue * ($rate / 100);
             default:
                 throw new NotFoundException('Unsupported state: ' . $stateAbbrev);
         }
