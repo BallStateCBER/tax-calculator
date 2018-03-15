@@ -66,7 +66,7 @@ class CalculatorTest extends TestCase
         $expected = [
             'state' => ['before' => 1980.9375, 'after' => 1744.2],
             'county' => ['before' => 0, 'after' => 876.96],
-            'property' => ['before' => 1398.6, 'after' => 1332.5],
+            'property' => ['before' => 4200, 'after' => 1332.5],
             'sales' => [
                 'food at home' => [
                     'before' => ['min' => 36.300000000000004, 'max' => 36.300000000000004],
@@ -97,7 +97,7 @@ class CalculatorTest extends TestCase
                 ]
             ],
             'total' => [
-                'before' => ['min' => 3859.4235, 'max' => 3961.7895],
+                'before' => ['min' => 6660.8235, 'max' => 6763.1895],
                 'after' => ['min' => 4431.368, 'max' => 4431.368]
             ]
         ];
@@ -317,7 +317,7 @@ class CalculatorTest extends TestCase
             $rate = $taxRatesTable->getPropertyTaxRate($countyId);
             $netAhv = $calculator->getNetAHV($homeValue, $countyId, $stateAbbrev);
             $expected = $key == 'before'
-                ? $netAhv * ($rate / 100) // Illinois
+                ? $homeValue * ($rate / 100) // Illinois
                 : $netAhv * min(($rate / 100), 0.01); // Indiana
             $actual = $calculator->getPropertyTax($homeValue, $countyId, $stateAbbrev);
             $this->assertEquals($expected, $actual);
