@@ -93,7 +93,6 @@
                             Net Adjusted Home Value (Net AHV)
                         </th>
 						<td>
-                            <?= $formulas['net_ahv']['before'] ?>
                         </td>
 						<td>
                             <?= $formulas['net_ahv']['after'] ?>
